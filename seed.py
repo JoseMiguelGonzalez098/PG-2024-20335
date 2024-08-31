@@ -1,32 +1,47 @@
-from app import app, db
-from models import Usuario, Video
+from app import create_app, db
+from app.models import User, Video, Traduccion
+
+app = create_app()
 
 with app.app_context():
     # Crear el usuario
-    nuevo_usuario = Usuario(
-        correo='user-dummy@se-chapinas.com',
-        contrasena='123'
+    nuevo_usuario = User(
+        mail='user-dummy@se-chapinas.com',
+        password='123',
+        streak=5,  # Ejemplo: podrías ajustar el valor de streak
+        quetzalito='MiQuetzalito'
     )
 
-    # Ubicación de los videos
+    # Agregar el usuario a la sesión
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    # Crear videos asociados al usuario
     video_paths = [
         '/srv/web-apps/api-central/videos/prueba1-2024.mp4',
         '/srv/web-apps/api-central/videos/prueba2-2024.mp4',
         '/srv/web-apps/api-central/videos/prueba3-2024.mp4'
     ]
 
-    # Crear los videos asociados al usuario
     videos = [
-        Video(traduccion='video1', favoritos=True, video=video_paths[0]),
-        Video(traduccion='video2', favoritos=True, video=video_paths[1]),
-        Video(traduccion='video3', favoritos=False, video=video_paths[2])
+        Video(id_user=nuevo_usuario.id, traduction_esp='video1', sentence_lensegua='sentence1', video=video_paths[0]),
+        Video(id_user=nuevo_usuario.id, traduction_esp='video2', sentence_lensegua='sentence2', video=video_paths[1]),
+        Video(id_user=nuevo_usuario.id, traduction_esp='video3', sentence_lensegua='sentence3', video=video_paths[2])
     ]
 
-    # Asociar los videos al usuario
-    nuevo_usuario.videos = videos
-
-    # Agregar a la base de datos
-    db.session.add(nuevo_usuario)
+    # Agregar los videos a la sesión
+    db.session.add_all(videos)
     db.session.commit()
 
-    print("Usuario y videos creados exitosamente.")
+    # Crear traducciones asociadas al usuario
+    traducciones = [
+        Traduccion(id_user=nuevo_usuario.id, sentence_lensegua='hola1', traduction_esp='holaesp1'),
+        Traduccion(id_user=nuevo_usuario.id, sentence_lensegua='hola2', traduction_esp='holaesp2'),
+        Traduccion(id_user=nuevo_usuario.id, sentence_lensegua='hola3', traduction_esp='holaesp3')
+    ]
+
+    # Agregar las traducciones a la sesión
+    db.session.add_all(traducciones)
+    db.session.commit()
+
+    print("Usuario, videos y traducciones creados exitosamente.")
