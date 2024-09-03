@@ -4,6 +4,13 @@ from app.models import User, Video, Traduccion
 app = create_app()
 
 with app.app_context():
+
+    # Elimina todos los datos de las tablas especificadas
+    db.session.query(Video).delete()
+    db.session.query(Traduccion).delete()
+    db.session.query(User).delete()
+    db.session.commit()
+
     # Crear el usuario
     nuevo_usuario = User(
         mail='user-dummy@se-chapinas.com',

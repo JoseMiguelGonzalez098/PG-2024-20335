@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from app.models import User, Video
 from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
+from flask import send_from_directory
 
 video_bp = Blueprint('video_bp', __name__)
 
@@ -100,3 +101,8 @@ def remove_video():
     db.session.commit()
 
     return jsonify({"message": "Video deleted successfully"}), 200
+
+@video_bp.route('/download_video/<path:filename>', methods=['GET'])
+def download_video(filename):
+    video_directory = "/srv/web-apps/api-central/videos/"
+    return send_from_directory(directory=video_directory, path=filename, as_attachment=True)

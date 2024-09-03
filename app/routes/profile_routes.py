@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, url_for
 from app import db
 from app.models import User, Video, Traduccion
 
@@ -38,7 +38,10 @@ def get_video():
     if not video:
         return jsonify({"error": "Video not found or does not belong to the user"}), 404
 
-    return jsonify({"video": video.video}), 200
+    # Crear la URL que apunta a la ruta para descargar el video
+    download_url = url_for('video_bp.download_video', filename=video.video.split('/')[-1], _external=True)
+
+    return jsonify({"video": download_url}), 200
 
 @profile_bp.route('/delete_user', methods=['DELETE'])
 def delete_user():
