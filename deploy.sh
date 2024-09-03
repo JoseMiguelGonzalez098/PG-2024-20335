@@ -31,5 +31,3 @@ else
 fi
 
 echo "Deployment complete!"
-sudo systemctl status api-central.service
-sudo systemctl status nginx
