@@ -17,9 +17,16 @@ flask db migrate -m "Agregar tabla Dictionary y actualizar modelos"
 echo "Upgrading database..."
 flask db upgrade
 
-# Actualizar Gunicorn y Nginx (si es necesario):
-echo "Restarting Gunicorn and Nginx..."
-sudo systemctl restart gunicorn
+# Recarga los archivos de configuracion 
+echo "Reloading configuration files..."
+sudo systemctl daemon-reload
+
+# Reinicia el servicio de la aplicacion
+echo "Restarting API Central service..."
+sudo systemctl restart api-central.service
+
+# Actualizar Nginx (si es necesario):
+echo "Restarting Nginx..."
 sudo systemctl restart nginx
 
 # Ejecutar el seed solo si el parámetro SEED_DB es 1
@@ -31,5 +38,3 @@ else
 fi
 
 echo "Deployment complete!"
-sudo systemctl status gunicorn
-sudo systemctl status nginx
