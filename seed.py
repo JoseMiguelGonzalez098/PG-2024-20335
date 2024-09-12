@@ -23,6 +23,18 @@ with app.app_context():
     db.session.add(nuevo_usuario)
     db.session.commit()
 
+    # Crear el usuario
+    nuevo_usuario = User(
+        mail='tiendas@gmail.com',
+        password='Ti3ndas@2001',
+        streak=5,  # Ejemplo: podrías ajustar el valor de streak
+        quetzalito='MiQuetzalito'
+    )
+
+    # Agregar el usuario a la sesión
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
     # Crear videos asociados al usuario
     video_paths = [
         '/srv/web-apps/api-central/videos/prueba1-2024.mp4',
