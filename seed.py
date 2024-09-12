@@ -27,7 +27,7 @@ with app.app_context():
     nuevo_usuario = User(
         mail='tiendas@gmail.com',
         password='Ti3ndas@2001',
-        streak=5,  # Ejemplo: podrías ajustar el valor de streak
+        streak=1,  # Ejemplo: podrías ajustar el valor de streak
         quetzalito='MiQuetzalito'
     )
 
