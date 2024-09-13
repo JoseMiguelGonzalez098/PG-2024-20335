@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.models import User, Video, Traduccion
 from app import db
-from app.routes.mailer_routes import send_confirmation_email
+from app.utils.email_utils import send_confirmation_email
 
 user_bp = Blueprint('user_bp', __name__)
 
