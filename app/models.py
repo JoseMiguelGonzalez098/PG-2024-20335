@@ -12,6 +12,7 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     streak = db.Column(db.Integer, default=0)  # Se asume que el streak inicia en 0
     quetzalito = db.Column(db.String(120), nullable=True)  # Se asume que puede ser nulo
+    confirmed = db.Column(db.Boolean, default=False)
 
     # Relación con las otras tablas
     videos = relationship("Video", backref="user", lazy=True)
