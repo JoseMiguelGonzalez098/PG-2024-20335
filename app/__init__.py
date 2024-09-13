@@ -8,7 +8,7 @@ from .routes.traduction_routes import traduction_bp
 from .routes.video_routes import video_bp
 from app.routes.dictionary_routes import dictionary_bp
 from app.routes.profile_routes import profile_bp
-from .mailer import mail
+from app.routes.mailer_routes import mailer_bp
 
 from .mailer import init_mail
 
@@ -28,6 +28,6 @@ def create_app():
     app.register_blueprint(video_bp)
     app.register_blueprint(dictionary_bp)
     app.register_blueprint(profile_bp)
-    app.register_blueprint(mail)
+    app.register_blueprint(mailer_bp)
 
     return app

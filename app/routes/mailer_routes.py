@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, url_for
-from app.models import Usuario, db
+from app.models import User, db 
 from flask_mail import Message
 from app import mail
 
@@ -21,7 +21,7 @@ def confirm_email():
         return jsonify({"error": "Correo no proporcionado"}), 400
 
     # Verificar si el usuario existe
-    user = Usuario.query.filter_by(correo=email).first()
+    user = User.query.filter_by(correo=email).first()
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
