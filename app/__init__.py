@@ -2,8 +2,8 @@ from flask import Flask
 from app.config import Config
 from .models import db
 from flask_migrate import Migrate
-from app.routes.user_routes import user_bp
 from app.routes.traduction_routes import traduction_bp
+from app.routes.user_routes import user_bp
 from app.routes.video_routes import video_bp
 from app.routes.dictionary_routes import dictionary_bp
 from app.routes.profile_routes import profile_bp
