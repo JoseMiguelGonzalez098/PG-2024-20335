@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.models import User, Video, Traduccion
 from app import db
+from app.mailer_routes import send_confirmation_email
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -81,6 +82,9 @@ def singup():
         streak=0,  # Ejemplo: podrías ajustar el valor de streak
         quetzalito=quezalito
     )
+
+    # Enviar correo de confirmación
+    send_confirmation_email(email)
 
     # Agregar el usuario a la sesión
     db.session.add(nuevo_usuario)
