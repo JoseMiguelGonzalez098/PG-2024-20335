@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request, url_for
 from app.models import User, db
 from flask_mail import Message
-from app import mail
 
 mailer_bp = Blueprint('mailer_bp', __name__)
 
@@ -12,7 +11,7 @@ def confirm_email():
         return jsonify({"error": "Correo no proporcionado"}), 400
 
     # Verificar si el usuario existe
-    user = User.query.filter_by(mail=email).first()  # Cambié correo a mail (para que coincida con el modelo)
+    user = User.query.filter_by(mail=email).first()
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
@@ -22,4 +21,10 @@ def confirm_email():
 
     user.confirmed = True
     db.session.commit()
+
+    # Mueve la importación de mail aquí
+    from app import mail  # Importamos mail localmente
+    msg = Message("Tu cuenta ha sido confirmada", recipients=[email])
+    mail.send(msg)
+
     return jsonify({"message": "Tu cuenta ha sido confirmada exitosamente."}), 200
