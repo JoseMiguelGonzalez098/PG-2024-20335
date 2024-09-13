@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, url_for
-from app.models import User, db 
+from app.models import Usuario, db
 from flask_mail import Message
 from app import mail
 
-mailer_bp = Blueprint('mailer_bp', __name__)  # Cambia user_bp a mailer_bp
+mailer_bp = Blueprint('mailer_bp', __name__)
 
 def send_confirmation_email(user_email):
     confirm_url = url_for('mailer_bp.confirm_email', email=user_email, _external=True)  # Genera la URL de confirmación con el correo
@@ -21,15 +21,14 @@ def confirm_email():
         return jsonify({"error": "Correo no proporcionado"}), 400
 
     # Verificar si el usuario existe
-    user = User.query.filter_by(correo=email).first()
+    user = Usuario.query.filter_by(correo=email).first()
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
-    # Verificar si el usuario ya está confirmado
+    # Confirmar el usuario si no está confirmado
     if user.confirmed:
         return jsonify({"message": "La cuenta ya está confirmada."}), 200
-    
-    # Confirmar el usuario si no está confirmado
+
     user.confirmed = True
     db.session.commit()
     return jsonify({"message": "Tu cuenta ha sido confirmada exitosamente."}), 200

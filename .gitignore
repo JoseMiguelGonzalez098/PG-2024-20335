@@ -25,4 +25,3 @@ migrations/
 
 # Sockets Unix (opcional si estás usando gunicorn con socket)
 *.sock
-app/config.py
