@@ -2,7 +2,7 @@
 venv/
 
 # Archivos de configuración sensibles
-config.py
+app/routes/config.py
 .env
 
 # Videos (si los almacenas en una carpeta específica)
