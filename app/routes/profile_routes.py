@@ -4,7 +4,7 @@ from app.models import User, Video, Traduccion
 
 profile_bp = Blueprint('profile_bp', __name__)
 
-@profile_bp.route('/get_user_info', methods=['GET'])
+@profile_bp.route('/get_user_info', methods=['POST'])
 def get_user_info():
     id_user = request.args.get('id_user')
 
@@ -28,7 +28,7 @@ def get_user_info():
 
     return jsonify(user_info), 200
 
-@profile_bp.route('/get_video', methods=['GET'])
+@profile_bp.route('/get_video', methods=['POST'])
 def get_video():
     id_user = request.args.get('id_user')
     id_video = request.args.get('id_video')
@@ -43,7 +43,7 @@ def get_video():
 
     return jsonify({"video": download_url}), 200
 
-@profile_bp.route('/get_image', methods=['GET'])
+@profile_bp.route('/get_image', methods=['POST'])
 def get_image():
     id_user = request.args.get('id_user')
     id_video = request.args.get('id_video')

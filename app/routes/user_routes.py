@@ -5,7 +5,7 @@ from app.utils.email_utils import send_confirmation_email
 
 user_bp = Blueprint('user_bp', __name__)
 
-@user_bp.route('/usuario', methods=['GET'])
+@user_bp.route('/usuario', methods=['POST'])
 def get_usuario_by_email():
     email = request.args.get('email')
     if not email:
@@ -41,7 +41,7 @@ def get_usuario_by_email():
 
     return jsonify(usuario_info), 200
 
-@user_bp.route('/login', methods=['GET'])
+@user_bp.route('/login', methods=['POST'])
 def login():
     email = request.args.get('email')
     password = request.args.get('password')
@@ -118,7 +118,7 @@ def change_password():
 
     return jsonify(responce), 200
 
-@user_bp.route('/forgot_password', methods=['GET'])
+@user_bp.route('/forgot_password', methods=['POST'])
 def forgot_password():
     email = request.args.get('email')
     if not email:

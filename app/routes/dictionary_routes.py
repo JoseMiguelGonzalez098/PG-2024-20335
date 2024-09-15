@@ -41,7 +41,7 @@ def remove_dictionary():
 
     return jsonify({"message": "Word removed from dictionary successfully"}), 200
 
-@dictionary_bp.route('/get_dictionary', methods=['GET'])
+@dictionary_bp.route('/get_dictionary', methods=['POST'])
 def get_dictionary():
     id_user = request.args.get('id_user')
 

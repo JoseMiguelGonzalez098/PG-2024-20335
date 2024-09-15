@@ -4,7 +4,7 @@ from flask_mail import Message
 
 mailer_bp = Blueprint('mailer_bp', __name__)
 
-@mailer_bp.route('/confirm', methods=['GET'])
+@mailer_bp.route('/confirm', methods=['POST'])
 def confirm_email():
     email = request.args.get('email')  # Obtenemos el correo desde la URL
     if not email:

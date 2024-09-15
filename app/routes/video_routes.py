@@ -50,7 +50,7 @@ def send_video():
 
     return jsonify({"message": "Video uploaded successfully", "video_id": new_video.id}), 200
 # Ruta: /report_video (GET)
-@video_bp.route('/report_video', methods=['GET'])
+@video_bp.route('/report_video', methods=['POST'])
 def report_video():
     id_user = request.args.get('id_user')
     id_video = request.args.get('id_video')
@@ -120,12 +120,12 @@ def remove_video():
 
     return jsonify({"message": "Video deleted successfully"}), 200
 
-@video_bp.route('/download_video/<path:filename>', methods=['GET'])
+@video_bp.route('/download_video/<path:filename>', methods=['POST'])
 def download_video(filename):
     video_directory = "/srv/web-apps/api-central/videos/"
     return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
 
-@video_bp.route('/download_image/<path:filename>', methods=['GET'])
+@video_bp.route('/download_image/<path:filename>', methods=['POST'])
 def download_image(filename):
     image_directory = "/srv/web-apps/api-central/images/"
     return send_from_directory(directory=image_directory, path=filename, as_attachment=True)
