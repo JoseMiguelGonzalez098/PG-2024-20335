@@ -6,8 +6,9 @@ dictionary_bp = Blueprint('dictionary_bp', __name__)
 
 @dictionary_bp.route('/add_dictionary', methods=['POST'])
 def add_dictionary():
-    id_user = request.form.get('id_user')
-    id_word = request.form.get('id_word')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_word = data.get('id_word')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
@@ -27,8 +28,9 @@ def add_dictionary():
 
 @dictionary_bp.route('/remove_dictionary', methods=['POST'])
 def remove_dictionary():
-    id_user = request.form.get('id_user')
-    id_word = request.form.get('id_word')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_word = data.get('id_word')
 
     # Verificar que la entrada exista
     entry = Dictionary.query.filter_by(id_user=id_user, id_word=id_word).first()
@@ -43,7 +45,8 @@ def remove_dictionary():
 
 @dictionary_bp.route('/get_dictionary', methods=['POST'])
 def get_dictionary():
-    id_user = request.args.get('id_user')
+    data = request.get_json()
+    id_user = data.get('id_user')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()

@@ -6,8 +6,9 @@ traduction_bp = Blueprint('traduction_bp', __name__)
 
 @traduction_bp.route('/send_traduction', methods=['POST'])
 def send_traduction():
-    id_user = request.form.get('id_user')
-    sentence_lensegua = request.form.get('sentence_lensegua')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    sentence_lensegua = data.get('sentence_lensegua')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
@@ -40,8 +41,9 @@ def send_traduction():
 
 @traduction_bp.route('/fav_traduction', methods=['POST'])
 def fav_traduction():
-    id_user = request.form.get('id_user')
-    id_sentence = request.form.get('id_sentence')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_sentence = data.get('id_sentence')
 
     # Verificar que la traducción exista y pertenezca al usuario
     traduction = Traduccion.query.filter_by(id=id_sentence, id_user=id_user).first()

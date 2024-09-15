@@ -6,7 +6,8 @@ mailer_bp = Blueprint('mailer_bp', __name__)
 
 @mailer_bp.route('/confirm', methods=['POST'])
 def confirm_email():
-    email = request.args.get('email')  # Obtenemos el correo desde la URL
+    data = request.get_json()
+    email = data.get('email')
     if not email:
         return jsonify({"message": "Correo no proporcionado"}), 400
 

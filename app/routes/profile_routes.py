@@ -6,7 +6,8 @@ profile_bp = Blueprint('profile_bp', __name__)
 
 @profile_bp.route('/get_user_info', methods=['POST'])
 def get_user_info():
-    id_user = request.args.get('id_user')
+    data = request.get_json()
+    id_user = data.get('id_user')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
@@ -30,8 +31,9 @@ def get_user_info():
 
 @profile_bp.route('/get_video', methods=['POST'])
 def get_video():
-    id_user = request.args.get('id_user')
-    id_video = request.args.get('id_video')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
 
     # Verificar que el usuario y el video existan
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
@@ -45,8 +47,9 @@ def get_video():
 
 @profile_bp.route('/get_image', methods=['POST'])
 def get_image():
-    id_user = request.args.get('id_user')
-    id_video = request.args.get('id_video')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
 
     # Verificar que el usuario y el video existan
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
@@ -75,7 +78,8 @@ def delete_user():
 
 @profile_bp.route('/add_streak', methods=['POST'])
 def add_streak():
-    id_user = request.form.get('id_user')
+    data = request.get_json()
+    id_user = data.get('id_user')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()

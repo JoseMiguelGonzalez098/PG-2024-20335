@@ -7,7 +7,8 @@ user_bp = Blueprint('user_bp', __name__)
 
 @user_bp.route('/usuario', methods=['POST'])
 def get_usuario_by_email():
-    email = request.args.get('email')
+    data = request.get_json()
+    email = data.get('email')
     if not email:
         return jsonify({"message": "No email provided"}), 400
 
@@ -43,8 +44,9 @@ def get_usuario_by_email():
 
 @user_bp.route('/login', methods=['POST'])
 def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
     if not email:
         return jsonify({"message": "No email provided"}), 400
 
@@ -64,9 +66,10 @@ def login():
 
 @user_bp.route('/signup', methods=['POST'])
 def singup():
-    email = request.args.get('email')
-    password = request.args.get('password')
-    quezalito = request.args.get('quezalito')
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    quezalito = data.get('quezalito')
     if not email:
         return jsonify({"message": "No email provided"}), 400
     
@@ -98,8 +101,9 @@ def singup():
 
 @user_bp.route('/change_password', methods=['POST'])
 def change_password():
-    id_user = request.args.get('id_user')
-    new_password = request.args.get('new_password')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    new_password = data.get('new_password')
    
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
@@ -120,7 +124,8 @@ def change_password():
 
 @user_bp.route('/forgot_password', methods=['POST'])
 def forgot_password():
-    email = request.args.get('email')
+    data = request.get_json()
+    email = data.get('email')
     if not email:
         return jsonify({"message": "No email provided"}), 400
 

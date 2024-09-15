@@ -12,8 +12,9 @@ IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
+    data = request.get_json()
     # Obtener id de usuario y archivo de video
-    id_user = request.form.get('id_user')
+    id_user = data.get('id_user')
     video_file = request.files.get('video')
 
     # Verificar que el usuario exista
@@ -49,13 +50,15 @@ def send_video():
     db.session.commit()
 
     return jsonify({"message": "Video uploaded successfully", "video_id": new_video.id}), 200
-# Ruta: /report_video (GET)
+
+# Ruta: /report_video (POST)
 @video_bp.route('/report_video', methods=['POST'])
 def report_video():
-    id_user = request.args.get('id_user')
-    id_video = request.args.get('id_video')
-    report_message = request.args.get('report_message')
-    report_img = request.args.get('report_img')  # Se asume que es una URL o path al archivo de imagen
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
+    report_message = data.get('report_message')
+    report_img = data.get('report_img')  # Se asume que es una URL o path al archivo de imagen
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
@@ -73,8 +76,9 @@ def report_video():
 # Ruta: /fav_video (POST)
 @video_bp.route('/fav_video', methods=['POST'])
 def fav_video():
-    id_user = request.form.get('id_user')
-    id_video = request.form.get('id_video')
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
     prev_video = request.files.get('prev_video')  # Cambiar a request.files.get()
 
     usuario = User.query.filter_by(id=id_user).first()
@@ -122,10 +126,12 @@ def remove_video():
 
 @video_bp.route('/download_video/<path:filename>', methods=['POST'])
 def download_video(filename):
+    data = request.get_json()
     video_directory = "/srv/web-apps/api-central/videos/"
     return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
 
 @video_bp.route('/download_image/<path:filename>', methods=['POST'])
 def download_image(filename):
+    data = request.get_json()
     image_directory = "/srv/web-apps/api-central/images/"
     return send_from_directory(directory=image_directory, path=filename, as_attachment=True)
