@@ -42,10 +42,16 @@ with app.app_context():
         '/srv/web-apps/api-central/videos/prueba3-2024.mp4'
     ]
 
+    images_path = [
+        '/srv/web-apps/api-central/images/prueba1-2024.jpg',
+        '/srv/web-apps/api-central/images/prueba2-2024.jpg',
+        '/srv/web-apps/api-central/images/prueba3-2024.jpg'
+    ]
+
     videos = [
-        Video(id_user=nuevo_usuario.id, traduction_esp='video1', sentence_lensegua='sentence1', video=video_paths[0]),
-        Video(id_user=nuevo_usuario.id, traduction_esp='video2', sentence_lensegua='sentence2', video=video_paths[1]),
-        Video(id_user=nuevo_usuario.id, traduction_esp='video3', sentence_lensegua='sentence3', video=video_paths[2])
+        Video(id_user=nuevo_usuario.id, traduction_esp='video1', sentence_lensegua='sentence1', video=video_paths[0], prev_image=images_path[0]),
+        Video(id_user=nuevo_usuario.id, traduction_esp='video2', sentence_lensegua='sentence2', video=video_paths[1], prev_image=images_path[1]),
+        Video(id_user=nuevo_usuario.id, traduction_esp='video3', sentence_lensegua='sentence3', video=video_paths[2], prev_image=images_path[2])
     ]
 
     # Agregar los videos a la sesión
