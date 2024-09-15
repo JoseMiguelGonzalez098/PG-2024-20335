@@ -26,11 +26,10 @@ def add_dictionary():
 
     return jsonify({"message": "Word added to dictionary successfully"}), 200
 
-@dictionary_bp.route('/remove_dictionary', methods=['POST'])
+@dictionary_bp.route('/remove_dictionary', methods=['DELETE'])
 def remove_dictionary():
-    data = request.get_json()
-    id_user = data.get('id_user')
-    id_word = data.get('id_word')
+    id_user = request.form.get('id_user')
+    id_word = request.form.get('id_word')
 
     # Verificar que la entrada exista
     entry = Dictionary.query.filter_by(id_user=id_user, id_word=id_word).first()
