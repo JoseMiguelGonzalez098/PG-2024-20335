@@ -95,7 +95,7 @@ def singup():
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
-        "id": usuario.id
+        "id": nuevo_usuario.id
     }
 
     return jsonify(responce), 200
