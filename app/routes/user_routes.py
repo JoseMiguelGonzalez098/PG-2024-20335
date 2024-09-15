@@ -82,7 +82,7 @@ def singup():
     nuevo_usuario = User(
         mail=email,
         password=password,
-        streak=0,  # Ejemplo: podrías ajustar el valor de streak
+        streak=0, 
         quetzalito=quezalito
     )
 
@@ -91,6 +91,7 @@ def singup():
 
     # Agregar el usuario a la sesión
     db.session.add(nuevo_usuario)
+    db.session.commit()
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
