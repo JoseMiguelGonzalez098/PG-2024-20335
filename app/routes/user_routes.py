@@ -87,7 +87,7 @@ def singup():
     )
 
     # Enviar correo de confirmación
-    send_confirmation_email(email)
+    # send_confirmation_email(email)
 
     # Agregar el usuario a la sesión
     db.session.add(nuevo_usuario)
