@@ -62,7 +62,7 @@ def login():
 
     return jsonify(responce), 200
 
-@user_bp.route('/singup', methods=['POST'])
+@user_bp.route('/signup', methods=['POST'])
 def singup():
     email = request.args.get('email')
     password = request.args.get('password')
