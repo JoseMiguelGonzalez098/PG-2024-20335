@@ -22,7 +22,7 @@ def get_user_info():
         "mail": usuario.mail,
         "streak": usuario.streak,
         "quetzalito": usuario.quetzalito,
-        "videos_fav": [{"traduction": video.traduction_esp, "id_video": video.id} for video in videos_fav],
+        "videos_fav": [{"traduction": video.traduction_esp, "id_video": video.id, "prev_image": video.prev_image} for video in videos_fav],
         "traductions_fav": [{"traduction": trad.traduction_esp, "id_traduction": trad.id} for trad in traducciones_fav]
     }
 
@@ -42,6 +42,21 @@ def get_video():
     download_url = url_for('video_bp.download_video', filename=video.video.split('/')[-1], _external=True)
 
     return jsonify({"video": download_url}), 200
+
+@profile_bp.route('/get_image', methods=['GET'])
+def get_image():
+    id_user = request.args.get('id_user')
+    id_video = request.args.get('id_video')
+
+    # Verificar que el usuario y el video existan
+    video = Video.query.filter_by(id=id_video, id_user=id_user).first()
+    if not video:
+        return jsonify({"error": "Video not found or does not belong to the user"}), 404
+
+    # Crear la URL que apunta a la ruta para descargar la imagen
+    download_url = url_for('video_bp.download_image', filename=video.prev_image.split('/')[-1], _external=True)
+
+    return jsonify({"image": download_url}), 200
 
 @profile_bp.route('/delete_user', methods=['DELETE'])
 def delete_user():

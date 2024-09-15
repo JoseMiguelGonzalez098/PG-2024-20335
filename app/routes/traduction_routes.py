@@ -8,28 +8,35 @@ traduction_bp = Blueprint('traduction_bp', __name__)
 def send_traduction():
     id_user = request.form.get('id_user')
     sentence_lensegua = request.form.get('sentence_lensegua')
-    traduction_esp = request.form.get('traduction_esp')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
         return jsonify({"error": "User not found"}), 404
+    
+    # Verificar que se ha proporcionado la frase en lensegua
+    if not sentence_lensegua:
+        return jsonify({"error": "sentence_lensegua is required"}), 400
+    
+    # Traducir la frase a español
+    traduccion_esp = sentence_lensegua[::-1]
 
-    # Verificar que se han proporcionado ambas traducciones
-    if not sentence_lensegua or not traduction_esp:
-        return jsonify({"error": "Both sentence_lensegua and traduction_esp are required"}), 400
-
-    # Crear una nueva traducción
     new_traduction = Traduccion(
         id_user=id_user,
         sentence_lensegua=sentence_lensegua,
-        traduction_esp=traduction_esp
+        traduction_esp=traduccion_esp
     )
 
     db.session.add(new_traduction)
     db.session.commit()
 
-    return jsonify({"message": "Traduction added successfully", "traduction_id": new_traduction.id}), 200
+    return jsonify(
+        {   
+            "message": "Traduction added successfully", 
+            "traduction_id": new_traduction.id, 
+            "traduction_esp": new_traduction.traduction_esp
+        }
+    ), 200
 
 @traduction_bp.route('/fav_traduction', methods=['POST'])
 def fav_traduction():

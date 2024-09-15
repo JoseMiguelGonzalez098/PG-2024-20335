@@ -8,6 +8,7 @@ video_bp = Blueprint('video_bp', __name__)
 
 # Ruta para almacenar los videos
 VIDEO_STORAGE_PATH = '/srv/web-apps/api-central/videos/'
+IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
@@ -74,6 +75,7 @@ def report_video():
 def fav_video():
     id_user = request.form.get('id_user')
     id_video = request.form.get('id_video')
+    prev_video = request.files.get('prev_video')  # Cambiar a request.files.get()
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
@@ -83,6 +85,22 @@ def fav_video():
     if not video:
         return jsonify({"error": "Video not found"}), 404
     
+    if not prev_video:  # Verificar que se ha proporcionado una imagen
+        return jsonify({"error": "No preview image provided"}), 400
+    
+    # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
+    filename = secure_filename(prev_video.filename)
+
+    # Definir la ruta para guardar la imagen
+    save_path = os.path.join(IMAGES_STORAGE_PATH, filename)
+
+    # Guardar la imagen en la ruta especificada
+    try:
+        prev_video.save(save_path)
+    except Exception as e:
+        return jsonify({"error": f"Failed to save image: {str(e)}"}), 500
+
+    # Marcar el video como favorito
     video.favoritos = True
     db.session.commit()
 
@@ -106,3 +124,8 @@ def remove_video():
 def download_video(filename):
     video_directory = "/srv/web-apps/api-central/videos/"
     return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
+
+@video_bp.route('/download_image/<path:filename>', methods=['GET'])
+def download_image(filename):
+    image_directory = "/srv/web-apps/api-central/images/"
+    return send_from_directory(directory=image_directory, path=filename, as_attachment=True)

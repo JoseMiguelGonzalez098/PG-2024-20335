@@ -29,6 +29,7 @@ class Video(db.Model):
     traduction_esp = db.Column(db.String(255), nullable=True)
     sentence_lensegua = db.Column(db.String(255), nullable=False)
     video = db.Column(db.String(255), nullable=False)  # Ruta del video
+    prev_image = db.Column(db.String(255), nullable=True)  # Ruta de la imagen previa
 
     def __repr__(self):
         return f'<Video {self.id} para usuario {self.id_user}>'

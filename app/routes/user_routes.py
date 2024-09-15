@@ -117,3 +117,24 @@ def change_password():
     }
 
     return jsonify(responce), 200
+
+@user_bp.route('/forgot_password', methods=['GET'])
+def forgot_password():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"error": "No email provided"}), 400
+
+    # Buscar el usuario por correo
+    usuario = User.query.filter_by(mail=email).first()
+    if not usuario:
+        return jsonify({"error": "User not found"}), 404
+
+    # Enviar correo de confirmación
+    send_confirmation_email(email)
+
+    # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
+    responce = {
+        "id": usuario.id
+    }
+
+    return jsonify(responce), 200
