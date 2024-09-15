@@ -8,12 +8,12 @@ mailer_bp = Blueprint('mailer_bp', __name__)
 def confirm_email():
     email = request.args.get('email')  # Obtenemos el correo desde la URL
     if not email:
-        return jsonify({"error": "Correo no proporcionado"}), 400
+        return jsonify({"message": "Correo no proporcionado"}), 400
 
     # Verificar si el usuario existe
     user = User.query.filter_by(mail=email).first()
     if not user:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
 
     # Confirmar el usuario si no está confirmado
     if user.confirmed:

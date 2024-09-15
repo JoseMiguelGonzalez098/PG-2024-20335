@@ -11,7 +11,7 @@ def get_user_info():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Obtener videos y traducciones favoritas del usuario
     videos_fav = Video.query.filter_by(id_user=id_user).all()
@@ -36,7 +36,7 @@ def get_video():
     # Verificar que el usuario y el video existan
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"error": "Video not found or does not belong to the user"}), 404
+        return jsonify({"message": "Video not found or does not belong to the user"}), 404
 
     # Crear la URL que apunta a la ruta para descargar el video
     download_url = url_for('video_bp.download_video', filename=video.video.split('/')[-1], _external=True)
@@ -51,7 +51,7 @@ def get_image():
     # Verificar que el usuario y el video existan
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"error": "Video not found or does not belong to the user"}), 404
+        return jsonify({"message": "Video not found or does not belong to the user"}), 404
 
     # Crear la URL que apunta a la ruta para descargar la imagen
     download_url = url_for('video_bp.download_image', filename=video.prev_image.split('/')[-1], _external=True)
@@ -65,7 +65,7 @@ def delete_user():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Eliminar el usuario y todas las entidades relacionadas
     db.session.delete(usuario)
@@ -80,7 +80,7 @@ def add_streak():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Incrementar el streak del usuario
     usuario.streak += 1

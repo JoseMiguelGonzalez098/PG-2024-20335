@@ -9,12 +9,12 @@ user_bp = Blueprint('user_bp', __name__)
 def get_usuario_by_email():
     email = request.args.get('email')
     if not email:
-        return jsonify({"error": "No email provided"}), 400
+        return jsonify({"message": "No email provided"}), 400
 
     # Buscar el usuario por correo
     usuario = User.query.filter_by(mail=email).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     usuario_info = {
@@ -46,14 +46,14 @@ def login():
     email = request.args.get('email')
     password = request.args.get('password')
     if not email:
-        return jsonify({"error": "No email provided"}), 400
+        return jsonify({"message": "No email provided"}), 400
 
     # Buscar el usuario por correo
     usuario = User.query.filter_by(mail=email).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
     if usuario.password != password:
-        return jsonify({"error": "Password incorrect"}), 404
+        return jsonify({"message": "Password incorrect"}), 404
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
@@ -68,12 +68,12 @@ def singup():
     password = request.args.get('password')
     quezalito = request.args.get('quezalito')
     if not email:
-        return jsonify({"error": "No email provided"}), 400
+        return jsonify({"message": "No email provided"}), 400
     
     # Buscar el usuario por correo
     usuario = User.query.filter_by(mail=email).first()
     if usuario:
-        return jsonify({"error": "User already exist"}), 404
+        return jsonify({"message": "User already exist"}), 404
     
     # Crear el usuario
     nuevo_usuario = User(
@@ -103,10 +103,10 @@ def change_password():
    
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
     
     if not new_password:
-        return jsonify({"error": "No new password provided"}), 400
+        return jsonify({"message": "No new password provided"}), 400
 
     # Cambiar la contraseña
     usuario.password = new_password
@@ -122,12 +122,12 @@ def change_password():
 def forgot_password():
     email = request.args.get('email')
     if not email:
-        return jsonify({"error": "No email provided"}), 400
+        return jsonify({"message": "No email provided"}), 400
 
     # Buscar el usuario por correo
     usuario = User.query.filter_by(mail=email).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Enviar correo de confirmación
     send_confirmation_email(email)

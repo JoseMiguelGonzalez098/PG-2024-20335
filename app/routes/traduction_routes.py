@@ -12,11 +12,11 @@ def send_traduction():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
     
     # Verificar que se ha proporcionado la frase en lensegua
     if not sentence_lensegua:
-        return jsonify({"error": "sentence_lensegua is required"}), 400
+        return jsonify({"message": "sentence_lensegua is required"}), 400
     
     # Traducir la frase a español
     traduccion_esp = sentence_lensegua[::-1]
@@ -46,7 +46,7 @@ def fav_traduction():
     # Verificar que la traducción exista y pertenezca al usuario
     traduction = Traduccion.query.filter_by(id=id_sentence, id_user=id_user).first()
     if not traduction:
-        return jsonify({"error": "Traduction not found or does not belong to the user"}), 404
+        return jsonify({"message": "Traduction not found or does not belong to the user"}), 404
 
     # Marcar la traducción como favorita
     traduction.favoritos = True
@@ -61,7 +61,7 @@ def remove_traduction():
     # Verificar que la traducción exista
     traduction = Traduccion.query.filter_by(id=id_sentence).first()
     if not traduction:
-        return jsonify({"error": "Traduction not found"}), 404
+        return jsonify({"message": "Traduction not found"}), 404
 
     # Eliminar la traducción
     db.session.delete(traduction)

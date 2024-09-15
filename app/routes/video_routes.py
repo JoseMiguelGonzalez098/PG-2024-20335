@@ -19,11 +19,11 @@ def send_video():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Verificar que se ha proporcionado un archivo de video
     if not video_file:
-        return jsonify({"error": "No video provided"}), 400
+        return jsonify({"message": "No video provided"}), 400
 
     # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
     filename = secure_filename(video_file.filename)
@@ -35,7 +35,7 @@ def send_video():
     try:
         video_file.save(save_path)
     except Exception as e:
-        return jsonify({"error": f"Failed to save video: {str(e)}"}), 500
+        return jsonify({"message": f"Failed to save video: {str(e)}"}), 500
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
     new_video = Video(
@@ -59,11 +59,11 @@ def report_video():
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
     
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"error": "Video not found"}), 404
+        return jsonify({"message": "Video not found"}), 404
 
     # Aquí podrías implementar lógica para almacenar o manejar el reporte.
     # Por simplicidad, solo devolvemos un mensaje de éxito.
@@ -79,14 +79,14 @@ def fav_video():
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
     
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"error": "Video not found"}), 404
+        return jsonify({"message": "Video not found"}), 404
     
     if not prev_video:  # Verificar que se ha proporcionado una imagen
-        return jsonify({"error": "No preview image provided"}), 400
+        return jsonify({"message": "No preview image provided"}), 400
     
     # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
     filename = secure_filename(prev_video.filename)
@@ -98,7 +98,7 @@ def fav_video():
     try:
         prev_video.save(save_path)
     except Exception as e:
-        return jsonify({"error": f"Failed to save image: {str(e)}"}), 500
+        return jsonify({"message": f"Failed to save image: {str(e)}"}), 500
 
     # Marcar el video como favorito
     video.favoritos = True
@@ -113,7 +113,7 @@ def remove_video():
 
     video = Video.query.filter_by(id=id_video).first()
     if not video:
-        return jsonify({"error": "Video not found"}), 404
+        return jsonify({"message": "Video not found"}), 404
 
     db.session.delete(video)
     db.session.commit()

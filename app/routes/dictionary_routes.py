@@ -12,7 +12,7 @@ def add_dictionary():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Crear una nueva entrada en el diccionario
     new_entry = Dictionary(
@@ -33,7 +33,7 @@ def remove_dictionary():
     # Verificar que la entrada exista
     entry = Dictionary.query.filter_by(id_user=id_user, id_word=id_word).first()
     if not entry:
-        return jsonify({"error": "Entry not found"}), 404
+        return jsonify({"message": "Entry not found"}), 404
 
     # Eliminar la entrada del diccionario
     db.session.delete(entry)
@@ -48,7 +48,7 @@ def get_dictionary():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"message": "User not found"}), 404
 
     # Obtener todas las palabras del diccionario para el usuario
     words = Dictionary.query.filter_by(id_user=id_user).all()
