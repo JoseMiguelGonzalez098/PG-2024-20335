@@ -15,14 +15,25 @@ def add_dictionary():
     if not usuario:
         return jsonify({"message": "User not found"}), 404
 
+    # Verificar y convertir id_word si es necesario
+    try:
+        id_word = int(id_word)
+    except ValueError:
+        return jsonify({"message": "id_word debe ser un número"}), 400
+
     # Crear una nueva entrada en el diccionario
     new_entry = Dictionary(
         id_user=id_user,
         id_word=id_word
     )
 
-    db.session.add(new_entry)
-    db.session.commit()
+    try:
+        db.session.add(new_entry)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al guardar en la base de datos: {e}")
+        return jsonify({"message": "Error al guardar en la base de datos"}), 500
 
     return jsonify({"message": "Word added to dictionary successfully"}), 200
 
