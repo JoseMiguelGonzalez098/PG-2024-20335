@@ -15,12 +15,6 @@ def add_dictionary():
     if not usuario:
         return jsonify({"message": "User not found"}), 404
 
-    # Verificar y convertir id_word si es necesario
-    try:
-        id_word = int(id_word)
-    except ValueError:
-        return jsonify({"message": "id_word debe ser un número"}), 400
-
     # Crear una nueva entrada en el diccionario
     new_entry = Dictionary(
         id_user=id_user,
