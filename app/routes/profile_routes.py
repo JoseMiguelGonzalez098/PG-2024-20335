@@ -23,8 +23,8 @@ def get_user_info():
         "mail": usuario.mail,
         "streak": usuario.streak,
         "quetzalito": usuario.quetzalito,
-        "videos_fav": [{"traduction": video.traduction_esp, "id_video": video.id, "prev_image": video.prev_image} for video in videos_fav],
-        "traductions_fav": [{"traduction": trad.traduction_esp, "id_traduction": trad.id} for trad in traducciones_fav]
+        "videos_fav": [{"sentence_lensegua":video.sentence_lensegua,"traduction_esp": video.traduction_esp, "id_video": video.id, "prev_image": video.prev_image} for video in videos_fav],
+        "traductions_fav": [{"traduction": trad.traduction_esp, "sentence_lensegua": trad.sentence_lensegua, "id_traduction": trad.id} for trad in traducciones_fav]
     }
 
     return jsonify(user_info), 200
