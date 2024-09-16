@@ -20,10 +20,11 @@ def send_traduction():
         return jsonify({"message": "sentence_lensegua is required"}), 400
     
     # Traducir la frase a español
-    traduccion_esp = sentence_lensegua[::-1]
+    traduccion_esp = sentence_lensegua + "traduccion ESP"
 
     new_traduction = Traduccion(
         id_user=id_user,
+        sentence_lensegua=sentence_lensegua,
         traduction_esp=traduccion_esp
     )
 
