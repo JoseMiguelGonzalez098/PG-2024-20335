@@ -24,7 +24,6 @@ def send_traduction():
 
     new_traduction = Traduccion(
         id_user=id_user,
-        sentence_lensegua=sentence_lensegua,
         traduction_esp=traduccion_esp
     )
 

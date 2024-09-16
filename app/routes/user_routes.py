@@ -59,7 +59,7 @@ def login():
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
-        "id": usuario.id
+        "id_user": usuario.id
     }
 
     return jsonify(responce), 200
@@ -95,7 +95,7 @@ def singup():
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
-        "id": nuevo_usuario.id
+        "id_user": nuevo_usuario.id
     }
 
     return jsonify(responce), 200
@@ -118,7 +118,7 @@ def change_password():
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
-        "id": usuario.id
+        "id_user": usuario.id
     }
 
     return jsonify(responce), 200
@@ -140,7 +140,7 @@ def forgot_password():
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
-        "id": usuario.id
+        "id_user": usuario.id
     }
 
     return jsonify(responce), 200
