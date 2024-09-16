@@ -31,9 +31,8 @@ def send_traduction():
     db.session.commit()
 
     return jsonify(
-        {   
-            "message": "Traduction added successfully", 
-            "traduction_id": new_traduction.id, 
+        {
+            "id_sentence": new_traduction.id, 
             "traduction_esp": new_traduction.traduction_esp
         }
     ), 200
