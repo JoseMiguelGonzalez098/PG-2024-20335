@@ -63,7 +63,7 @@ def get_image():
 
 @profile_bp.route('/delete_user', methods=['DELETE'])
 def delete_user():
-    id_user = request.form.get('id_user')
+    id_user = request.args.get('id_user')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()

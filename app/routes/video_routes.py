@@ -38,18 +38,33 @@ def send_video():
     except Exception as e:
         return jsonify({"message": f"Failed to save video: {str(e)}"}), 500
 
+    sentence_lensegua = ""
+
+    # Procesamiento del video para obtener la traducción
+    sentence_lensegua = "Texto en lensegua"
+
+    traduction_esp = ""
+
+    # Procesamiento de la oracion para obtener la traducción
+    traduction_esp = "Traducción del video en español" 
+
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
     new_video = Video(
-        usuario_id=id_user,
-        video=save_path,
-        traduccion=None,  # Puedes ajustar esto según tus necesidades
-        favoritos=False
+        id_user=id_user,
+        traduction_esp=traduction_esp,
+        sentence_lensegua=sentence_lensegua,
+        video=save_path
     )
 
     db.session.add(new_video)
     db.session.commit()
 
-    return jsonify({"message": "Video uploaded successfully", "video_id": new_video.id}), 200
+    return jsonify(
+        {
+            "id_video": new_video.id, 
+            "traduction_esp": new_video.traduction_esp, 
+            "sentence_lensegua": new_video.sentence_lensegua
+        }), 200
 
 # Ruta: /report_video (POST)
 @video_bp.route('/report_video', methods=['POST'])
