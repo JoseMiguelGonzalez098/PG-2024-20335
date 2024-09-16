@@ -12,9 +12,8 @@ IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
-    data = request.get_json()
     # Obtener id de usuario y archivo de video
-    id_user = data.get('id_user')
+    id_user = request.form.get('id_user')
     video_file = request.files.get('video')
 
     # Verificar que el usuario exista
