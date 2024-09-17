@@ -11,13 +11,17 @@ video_bp = Blueprint('video_bp', __name__)
 VIDEO_STORAGE_PATH = '/srv/web-apps/api-central/videos/'
 IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
-media = UploadSet('media', ('mp4'))
+ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
+
+def allowed_file(filename):
+    """Verifica si el archivo tiene una extensión permitida."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
     # Obtener id de usuario y archivo de video
     id_user = request.form.get('id_user')
-    video_file = request.files['video']
+    video_file = request.files.get('video')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
@@ -25,14 +29,15 @@ def send_video():
         return jsonify({"message": "User not found"}), 404
 
     # Verificar que se ha proporcionado un archivo de video
-    if not video_file:
-        return jsonify({"message": "No video provided"}), 400
+    if not video_file or not allowed_file(video_file.filename):
+        return jsonify({"message": "No video provided or invalid file type"}), 400
 
     # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
     filename = secure_filename(video_file.filename)
     
-    # Crear la ruta completa para guardar el archivo
-    save_path = os.path.join(VIDEO_STORAGE_PATH, filename)
+    # Evitar sobrescribir archivos con el mismo nombre añadiendo una marca de tiempo
+    unique_filename = f"{id_user}_{int(time.time())}_{filename}"
+    save_path = os.path.join(VIDEO_STORAGE_PATH, unique_filename)
 
     # Guardar el archivo en la ruta especificada
     try:
@@ -40,15 +45,9 @@ def send_video():
     except Exception as e:
         return jsonify({"message": f"Failed to save video: {str(e)}"}), 500
 
-    sentence_lensegua = ""
-
     # Procesamiento del video para obtener la traducción
     sentence_lensegua = "Texto en lensegua"
-
-    traduction_esp = ""
-
-    # Procesamiento de la oracion para obtener la traducción
-    traduction_esp = "Traducción del video en español" 
+    traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
     new_video = Video(
@@ -67,7 +66,6 @@ def send_video():
             "traduction_esp": new_video.traduction_esp, 
             "sentence_lensegua": new_video.sentence_lensegua
         }), 200
-
 # Ruta: /report_video (POST)
 @video_bp.route('/report_video', methods=['POST'])
 def report_video():
