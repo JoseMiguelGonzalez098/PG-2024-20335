@@ -195,12 +195,10 @@ def remove_video():
 
 @video_bp.route('/download_video/<path:filename>', methods=['GET'])
 def download_video(filename):
-    data = request.get_json()
     video_directory = "/srv/web-apps/api-central/videos/"
-    return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
+    return send_from_directory(directory=video_directory, filename=filename, as_attachment=True)
 
 @video_bp.route('/download_image/<path:filename>', methods=['GET'])
 def download_image(filename):
-    data = request.get_json()
     image_directory = "/srv/web-apps/api-central/images/"
-    return send_from_directory(directory=image_directory, path=filename, as_attachment=True)
+    return send_from_directory(directory=image_directory, filename=filename, as_attachment=True)
