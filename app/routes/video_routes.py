@@ -45,8 +45,9 @@ def send_video():
     except Exception as e:
         return jsonify({"message": f"Failed to save video: {str(e)}"}), 500
 
-    # Procesamiento del video para obtener la traducción
     sentence_lensegua = "Texto en lensegua"
+
+    # Procesamiento de la oracion para obtener la traducción
     traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
@@ -65,7 +66,9 @@ def send_video():
             "id_video": new_video.id, 
             "traduction_esp": new_video.traduction_esp, 
             "sentence_lensegua": new_video.sentence_lensegua
-        }), 200
+        }
+    ), 200
+
 # Ruta: /report_video (POST)
 @video_bp.route('/report_video', methods=['POST'])
 def report_video():
