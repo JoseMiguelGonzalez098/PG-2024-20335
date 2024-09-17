@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
 from flask import send_from_directory
 from flask_uploads import UploadSet
+import os
 
 video_bp = Blueprint('video_bp', __name__)
 
@@ -14,40 +15,37 @@ IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
 
 def allowed_file(filename):
-    """Verifica si el archivo tiene una extensión permitida."""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
-    # Obtener id de usuario y archivo de video
+    if 'video' not in request.files:
+        return jsonify({'error': 'No video part'}), 400
+    
+    file = request.files['video']
     id_user = request.form.get('id_user')
-    video_file = request.files.get('video')
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
 
-    # Verificar que se ha proporcionado un archivo de video
-    if not video_file or not allowed_file(video_file.filename):
-        return jsonify({"message": "No video provided or invalid file type"}), 400
+    if not file or not allowed_file(file.filename):
+        return jsonify({'message': 'No se seleccionó un archivo o no es el formato correcto'}), 400
 
-    # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
-    filename = secure_filename(video_file.filename)
+    # Guardar el archivo con un nombre seguro
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(VIDEO_STORAGE_PATH, filename)
     
-    # Evitar sobrescribir archivos con el mismo nombre añadiendo una marca de tiempo
-    unique_filename = f"{id_user}_{int(time.time())}_{filename}"
-    save_path = os.path.join(VIDEO_STORAGE_PATH, unique_filename)
-
     # Guardar el archivo en la ruta especificada
     try:
-        video_file.save(save_path)
+        file.save(file_path)
     except Exception as e:
-        return jsonify({"message": f"Failed to save video: {str(e)}"}), 500
+        return jsonify({"message": "Error al guardar archivo"}), 500
 
+    # Procesamiento de la oración para obtener la traducción
     sentence_lensegua = "Texto en lensegua"
-
-    # Procesamiento de la oracion para obtener la traducción
     traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
@@ -55,11 +53,15 @@ def send_video():
         id_user=id_user,
         traduction_esp=traduction_esp,
         sentence_lensegua=sentence_lensegua,
-        video=save_path
+        video=filename  # Guardar solo el nombre del archivo
     )
 
-    db.session.add(new_video)
-    db.session.commit()
+    try:
+        db.session.add(new_video)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error al guardar en la base de datos"}), 500
 
     return jsonify(
         {
