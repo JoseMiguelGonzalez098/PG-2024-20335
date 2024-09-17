@@ -13,22 +13,26 @@ def add_dictionary():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "No se ha encontrado el usuario"}), 404
+    
+    dictionary = Dictionary.query.filter_by(id_user=id_user, id_word=id_word).first()
+    if not dictionary:
+        # Crear una nueva entrada en el diccionario
+        new_entry = Dictionary(
+            id_user=id_user,
+            id_word=id_word
+        )
 
-    # Crear una nueva entrada en el diccionario
-    new_entry = Dictionary(
-        id_user=id_user,
-        id_word=id_word
-    )
+        try:
+            db.session.add(new_entry)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"message": "Error al guardar en la base de datos"}), 500
 
-    try:
-        db.session.add(new_entry)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": "Error al guardar en la base de datos"}), 500
-
-    return jsonify({"message": "Word added to dictionary successfully"}), 200
+        return jsonify({"message": "Palabra agregada a favoritos"}), 200
+    else:
+        return jsonify({"message": "La palabra ya se encuentra en favoritos"}), 200
 
 @dictionary_bp.route('/remove_dictionary', methods=['DELETE'])
 def remove_dictionary():
