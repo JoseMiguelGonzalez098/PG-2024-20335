@@ -212,7 +212,7 @@ def download_image(filename):
     file_path = os.path.join(image_directory, filename)
     
     if not os.path.exists(file_path):
-        return jsonify({"message": "File not found"}), 404
+        return jsonify({"message": f"File not found: {file_path}"}), 404
     
     try:
         return send_from_directory(directory=image_directory, filename=filename, as_attachment=True)
