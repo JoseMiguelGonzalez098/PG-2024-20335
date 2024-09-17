@@ -3,7 +3,6 @@ from app.models import User, Video
 from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
 from flask import send_from_directory
-from flask_uploads import UploadSet
 import os
 
 video_bp = Blueprint('video_bp', __name__)
