@@ -57,7 +57,7 @@ def fav_traduction():
 
 @traduction_bp.route('/remove_traduction', methods=['DELETE'])
 def remove_traduction():
-    id_sentence = request.form.get('id_sentence')
+    id_sentence = request.args.get('id_sentence')
 
     # Verificar que la traducción exista
     traduction = Traduccion.query.filter_by(id=id_sentence).first()
