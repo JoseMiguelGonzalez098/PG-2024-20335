@@ -131,7 +131,7 @@ def fav_video():
     # Marcar el video como favorito
     video.is_favorite = True
     # Guardar la ruta de la imagen si es necesario
-    video.preview_image = filename  # Asumiendo que tienes este campo en tu modelo
+    video.prev_image = filename  # Asumiendo que tienes este campo en tu modelo
     db.session.commit()
 
     return jsonify({"message": "Video marcado como favorito"}), 200
@@ -148,12 +148,12 @@ def remove_fav_video():
 
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"message": "No se ha dado video"}), 404
+        return jsonify({"message": "No se ha dado video id"}), 404
 
     # Eliminar la imagen previa existente si hay una
     if video.prev_image:
         try:
-            os.remove(video.prev_image)
+            os.remove(os.path.join(IMAGES_STORAGE_PATH, video.prev_image))
         except Exception as e:
             return jsonify({"message": f"Failed to delete existing image: {str(e)}"}), 500
 
@@ -180,9 +180,9 @@ def remove_video():
         print(f"Error al eliminar el archivo de video: {str(e)}")
 
     # Intentar eliminar el archivo de imagen de previsualización si existe
-    if video.preview_image:
+    if video.prev_image:
         try:
-            os.remove(os.path.join(IMAGES_STORAGE_PATH, video.preview_image))
+            os.remove(os.path.join(IMAGES_STORAGE_PATH, video.prev_image))
         except OSError as e:
             print(f"Error al eliminar el archivo de imagen: {str(e)}")
 
