@@ -38,6 +38,7 @@ class Traduccion(db.Model):
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     sentence_lensegua = db.Column(db.String(255), nullable=False)
     traduction_esp = db.Column(db.String(255), nullable=True)
+    is_favorite = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<Traduccion {self.id} para usuario {self.id_user}>'
@@ -47,7 +48,6 @@ class Dictionary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     id_word = db.Column(db.String(255), nullable=False)  # Este ID no es único
-    is_favorite = db.Column(db.Boolean, default=False)
     
     def __repr__(self):
         return f'<Dictionary {self.id_word} para usuario {self.id_user}>'
