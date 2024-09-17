@@ -45,6 +45,22 @@ def get_video():
 
     return jsonify({"video": download_url}), 200
 
+@profile_bp.route('/get_images', methods=['POST'])
+def get_images():
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
+
+    # Verificar que el usuario y el video existan
+    video = Video.query.filter_by(id=id_video, id_user=id_user).first()
+    if not video:
+        return jsonify({"message": "Video not found or does not belong to the user"}), 404
+
+    # Crear la URL que apunta a la ruta para descargar el video
+    download_url = url_for('video_bp.download_image', filename=video.prev_image.split('/')[-1], _external=True)
+
+    return jsonify({"video": download_url}), 200
+
 @profile_bp.route('/get_image', methods=['POST'])
 def get_image():
     data = request.get_json()
