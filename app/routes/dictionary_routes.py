@@ -26,26 +26,39 @@ def add_dictionary():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        print(f"Error al guardar en la base de datos: {e}")
         return jsonify({"message": "Error al guardar en la base de datos"}), 500
 
     return jsonify({"message": "Word added to dictionary successfully"}), 200
 
 @dictionary_bp.route('/remove_dictionary', methods=['DELETE'])
 def remove_dictionary():
-    id_user = request.form.get('id_user')
-    id_word = request.form.get('id_word')
+    # Usar request.args para obtener parámetros de la URL
+    id_user = request.args.get('id_user')
+    id_word = request.args.get('id_word')
+
+    if not id_user or not id_word:
+        return jsonify({"message": "id_user y id_word son requeridos"}), 400
+
+    # Verificar que el usuario exista
+    usuario = User.query.filter_by(id=id_user).first()
+    if not usuario:
+        return jsonify({"message": "No se ha encontrado el usuario"}), 404
 
     # Verificar que la entrada exista
     entry = Dictionary.query.filter_by(id_user=id_user, id_word=id_word).first()
     if not entry:
-        return jsonify({"message": "Entry not found"}), 404
+        return jsonify({"message": "No se ha encontrado el registro"}), 404
 
     # Eliminar la entrada del diccionario
-    db.session.delete(entry)
-    db.session.commit()
+    try:
+        db.session.delete(entry)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error al eliminar la entrada"}), 500
 
-    return jsonify({"message": "Word removed from dictionary successfully"}), 200
+    return jsonify({"message": "Se ha eliminado el registro del diccionario."}), 200
+
 
 @dictionary_bp.route('/get_dictionary', methods=['POST'])
 def get_dictionary():
