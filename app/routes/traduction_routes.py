@@ -13,11 +13,11 @@ def send_traduction():
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
     
     # Verificar que se ha proporcionado la frase en lensegua
     if not sentence_lensegua:
-        return jsonify({"message": "sentence_lensegua is required"}), 400
+        return jsonify({"message": "Frase en lensegua es requerida"}), 400
     
     # Traducir la frase a español
     traduccion_esp = sentence_lensegua + "traduccion ESP"
@@ -25,7 +25,8 @@ def send_traduction():
     new_traduction = Traduccion(
         id_user=id_user,
         sentence_lensegua=sentence_lensegua,
-        traduction_esp=traduccion_esp
+        traduction_esp=traduccion_esp,
+        is_favorite=False
     )
 
     db.session.add(new_traduction)
@@ -44,16 +45,20 @@ def fav_traduction():
     id_user = data.get('id_user')
     id_sentence = data.get('id_sentence')
 
+    usuario = User.query.filter_by(id=id_user).first()
+    if not usuario:
+        return jsonify({"message": "Usuario no encontrado"}), 404
+
     # Verificar que la traducción exista y pertenezca al usuario
     traduction = Traduccion.query.filter_by(id=id_sentence, id_user=id_user).first()
     if not traduction:
-        return jsonify({"message": "Traduction not found or does not belong to the user"}), 404
+        return jsonify({"message": "La traduccion no existe o no le pertenece al usuario"}), 404
 
     # Marcar la traducción como favorita
-    traduction.favoritos = True
+    traduction.is_favorite = True
     db.session.commit()
 
-    return jsonify({"message": "Traduction marked as favorite"}), 200
+    return jsonify({"message": "Traduccion marcada como favorita"}), 200
 
 @traduction_bp.route('/remove_traduction', methods=['DELETE'])
 def remove_traduction():
@@ -62,10 +67,10 @@ def remove_traduction():
     # Verificar que la traducción exista
     traduction = Traduccion.query.filter_by(id=id_sentence).first()
     if not traduction:
-        return jsonify({"message": "Traduction not found"}), 404
+        return jsonify({"message": "Traduccion no encontrada"}), 404
 
     # Eliminar la traducción
     db.session.delete(traduction)
     db.session.commit()
 
-    return jsonify({"message": "Traduction removed successfully"}), 200
+    return jsonify({"message": "Traduccion borrada con exito"}), 200

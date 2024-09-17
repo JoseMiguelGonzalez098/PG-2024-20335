@@ -14,10 +14,6 @@ class User(db.Model):
     quetzalito = db.Column(db.String(120), nullable=True)  # Se asume que puede ser nulo
     confirmed = db.Column(db.Boolean, default=False)
 
-    # Relación con las otras tablas
-    videos = relationship("Video", backref="user", lazy=True)
-    traducciones = relationship("Traduccion", backref="user", lazy=True)
-
     def __repr__(self):
         return f'<User {self.mail}>'
 
@@ -30,6 +26,7 @@ class Video(db.Model):
     sentence_lensegua = db.Column(db.String(255), nullable=False)
     video = db.Column(db.String(255), nullable=False)  # Ruta del video
     prev_image = db.Column(db.String(255), nullable=True)  # Ruta de la imagen previa
+    is_favorite = db.Colum(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<Video {self.id} para usuario {self.id_user}>'
@@ -50,7 +47,7 @@ class Dictionary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     id_word = db.Column(db.String(255), nullable=False)  # Este ID no es único
-
+    is_favorite = db.Colum(db.Boolean, default=False)
     
     def __repr__(self):
         return f'<Dictionary {self.id_word} para usuario {self.id_user}>'
