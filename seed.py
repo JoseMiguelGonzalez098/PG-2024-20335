@@ -31,9 +31,9 @@ with app.app_context():
     ]
 
     images_path = [
-        '/srv/web-apps/api-central/images/prueba1-2024.jpg',
-        '/srv/web-apps/api-central/images/prueba2-2024.jpg',
-        '/srv/web-apps/api-central/images/prueba3-2024.jpg'
+        '/srv/web-apps/api-central/images/prueba1-2024.png',
+        '/srv/web-apps/api-central/images/prueba2-2024.png',
+        '/srv/web-apps/api-central/images/prueba3-2024.png'
     ]
 
     videos = [

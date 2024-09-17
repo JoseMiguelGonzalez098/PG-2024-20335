@@ -202,7 +202,7 @@ def download_video(filename):
         return jsonify({"message": "File not found"}), 404
     
     try:
-        return send_from_directory(directory=video_directory, filename=filename, as_attachment=True)
+        return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
     except Exception as e:
         return jsonify({"message": f"Error downloading video: {str(e)}"}), 500
 
@@ -215,6 +215,6 @@ def download_image(filename):
         return jsonify({"message": f"File not found: {file_path}"}), 404
     
     try:
-        return send_from_directory(directory=image_directory, filename=filename, as_attachment=True)
+        return send_from_directory(directory=image_directory, path=filename, as_attachment=True)
     except Exception as e:
         return jsonify({"message": f"Error downloading image: {str(e)}"}), 500
