@@ -196,9 +196,25 @@ def remove_video():
 @video_bp.route('/download_video/<path:filename>', methods=['GET'])
 def download_video(filename):
     video_directory = "/srv/web-apps/api-central/videos/"
-    return send_from_directory(directory=video_directory, filename=filename, as_attachment=True)
+    file_path = os.path.join(video_directory, filename)
+    
+    if not os.path.exists(file_path):
+        return jsonify({"message": "File not found"}), 404
+    
+    try:
+        return send_from_directory(directory=video_directory, filename=filename, as_attachment=True)
+    except Exception as e:
+        return jsonify({"message": f"Error downloading video: {str(e)}"}), 500
 
 @video_bp.route('/download_image/<path:filename>', methods=['GET'])
 def download_image(filename):
     image_directory = "/srv/web-apps/api-central/images/"
-    return send_from_directory(directory=image_directory, filename=filename, as_attachment=True)
+    file_path = os.path.join(image_directory, filename)
+    
+    if not os.path.exists(file_path):
+        return jsonify({"message": "File not found"}), 404
+    
+    try:
+        return send_from_directory(directory=image_directory, filename=filename, as_attachment=True)
+    except Exception as e:
+        return jsonify({"message": f"Error downloading image: {str(e)}"}), 500
