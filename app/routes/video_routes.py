@@ -193,13 +193,13 @@ def remove_video():
 
     return jsonify({"message": "Video eliminado exitosamente"}), 200
 
-@video_bp.route('/download_video/<path:filename>', methods=['POST'])
+@video_bp.route('/download_video/<path:filename>', methods=['GET'])
 def download_video(filename):
     data = request.get_json()
     video_directory = "/srv/web-apps/api-central/videos/"
     return send_from_directory(directory=video_directory, path=filename, as_attachment=True)
 
-@video_bp.route('/download_image/<path:filename>', methods=['POST'])
+@video_bp.route('/download_image/<path:filename>', methods=['GET'])
 def download_image(filename):
     data = request.get_json()
     image_directory = "/srv/web-apps/api-central/images/"

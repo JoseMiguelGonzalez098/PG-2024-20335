@@ -59,7 +59,7 @@ def get_images():
     # Crear la URL que apunta a la ruta para descargar el video
     download_url = url_for('video_bp.download_image', filename=video.prev_image.split('/')[-1], _external=True)
 
-    return jsonify({"video": download_url}), 200
+    return jsonify({"image": download_url}), 200
 
 @profile_bp.route('/get_image', methods=['POST'])
 def get_image():
