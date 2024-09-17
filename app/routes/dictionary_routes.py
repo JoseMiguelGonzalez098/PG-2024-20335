@@ -32,7 +32,6 @@ def add_dictionary():
 
 @dictionary_bp.route('/remove_dictionary', methods=['DELETE'])
 def remove_dictionary():
-    # Usar request.args para obtener parámetros de la URL
     id_user = request.args.get('id_user')
     id_word = request.args.get('id_word')
 
@@ -57,7 +56,7 @@ def remove_dictionary():
         db.session.rollback()
         return jsonify({"message": "Error al eliminar la entrada"}), 500
 
-    return jsonify({"message": "Se ha eliminado el registro del diccionario."}), 200
+    return jsonify({"message": "Registro eliminado del diccionario"}), 200
 
 
 @dictionary_bp.route('/get_dictionary', methods=['POST'])
