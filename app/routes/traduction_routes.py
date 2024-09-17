@@ -61,7 +61,7 @@ def fav_traduction():
     return jsonify({"message": "Traduccion marcada como favorita"}), 200
 
 @traduction_bp.route('/remove_fav_traduction', methods=['POST'])
-def fav_traduction():
+def remove_fav_traduction():
     data = request.get_json()
     id_user = data.get('id_user')
     id_sentence = data.get('id_sentence')
