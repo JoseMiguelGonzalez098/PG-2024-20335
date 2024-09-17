@@ -16,6 +16,12 @@ def get_usuario_by_email():
     usuario = User.query.filter_by(mail=email).first()
     if not usuario:
         return jsonify({"message": "User not found"}), 404
+    
+    # Obtener todas las traudcciones favoritas
+    # words = Dictionary.query.filter_by(id_user=id_user).all()
+    traductions = Traduccion.query.filter_by(id_user=usuario.id).all()
+
+    traductions_list = [{"sentence_lensegua": traduction.sentence_lensegua, "traduction_esp": traduction.traduction_esp} for traduction in traductions]
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     usuario_info = {
@@ -31,13 +37,7 @@ def get_usuario_by_email():
                 "video": video.video
             } for video in usuario.videos
         ],
-        "traducciones": [
-            {
-                "id": traduccion.id,
-                "sentence_lensegua": traduccion.sentence_lensegua,
-                "traduction_esp": traduccion.traduction_esp
-            } for traduccion in usuario.traducciones
-        ]
+        "traducciones": traductions_list
     }
 
     return jsonify(usuario_info), 200
