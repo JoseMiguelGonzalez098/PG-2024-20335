@@ -26,7 +26,7 @@ class Video(db.Model):
     sentence_lensegua = db.Column(db.String(255), nullable=False)
     video = db.Column(db.String(255), nullable=False)  # Ruta del video
     prev_image = db.Column(db.String(255), nullable=True)  # Ruta de la imagen previa
-    is_favorite = db.Colum(db.Boolean, default=False)
+    is_favorite = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<Video {self.id} para usuario {self.id_user}>'
@@ -47,7 +47,7 @@ class Dictionary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     id_word = db.Column(db.String(255), nullable=False)  # Este ID no es único
-    is_favorite = db.Colum(db.Boolean, default=False)
+    is_favorite = db.Column(db.Boolean, default=False)
     
     def __repr__(self):
         return f'<Dictionary {self.id_word} para usuario {self.id_user}>'
