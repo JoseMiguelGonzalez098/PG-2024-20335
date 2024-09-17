@@ -15,8 +15,8 @@ def get_user_info():
         return jsonify({"message": "User not found"}), 404
 
     # Obtener videos y traducciones favoritas del usuario
-    videos_fav = Video.query.filter_by(id_user=id_user).all()
-    traducciones_fav = Traduccion.query.filter_by(id_user=id_user).all()
+    videos_fav = Video.query.filter_by(id_user=id_user, is_favorite=True).all()
+    traducciones_fav = Traduccion.query.filter_by(id_user=id_user, is_favorite=True).all()
 
     # Preparar la respuesta con la información del usuario
     user_info = {

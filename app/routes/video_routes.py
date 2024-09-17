@@ -3,6 +3,7 @@ from app.models import User, Video
 from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
 from flask import send_from_directory
+from flask_uploads import UploadSet
 
 video_bp = Blueprint('video_bp', __name__)
 
@@ -10,11 +11,13 @@ video_bp = Blueprint('video_bp', __name__)
 VIDEO_STORAGE_PATH = '/srv/web-apps/api-central/videos/'
 IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
+media = UploadSet('media', ('mp4'))
+
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
     # Obtener id de usuario y archivo de video
     id_user = request.form.get('id_user')
-    video_file = request.files.get('video')
+    video_file = request.files['video']
 
     # Verificar que el usuario exista
     usuario = User.query.filter_by(id=id_user).first()
@@ -76,16 +79,16 @@ def report_video():
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
     
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"message": "Video not found"}), 404
+        return jsonify({"message": "Video no encontardo"}), 404
 
     # Aquí podrías implementar lógica para almacenar o manejar el reporte.
     # Por simplicidad, solo devolvemos un mensaje de éxito.
     
-    return jsonify({"message": "Report submitted successfully"}), 200
+    return jsonify({"message": "Se ha reportado el video exitosamente"}), 200
 
 # Ruta: /fav_video (POST)
 @video_bp.route('/fav_video', methods=['POST'])
@@ -97,14 +100,14 @@ def fav_video():
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
     
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"message": "Video not found"}), 404
+        return jsonify({"message": "No se ha dado video"}), 404
     
     if not prev_video:  # Verificar que se ha proporcionado una imagen
-        return jsonify({"message": "No preview image provided"}), 400
+        return jsonify({"message": "No se ha proporcionado imagen de preview"}), 400
     
     # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
     filename = secure_filename(prev_video.filename)
@@ -119,10 +122,37 @@ def fav_video():
         return jsonify({"message": f"Failed to save image: {str(e)}"}), 500
 
     # Marcar el video como favorito
-    video.favoritos = True
+    video.is_favorite = True
     db.session.commit()
 
     return jsonify({"message": "Video marked as favorite"}), 200
+
+@video_bp.route('/remove_fav_video', methods=['POST'])
+def remove_fav_video():
+    data = request.get_json()
+    id_user = data.get('id_user')
+    id_video = data.get('id_video')
+
+    usuario = User.query.filter_by(id=id_user).first()
+    if not usuario:
+        return jsonify({"message": "Usuario no encontrado"}), 404
+
+    video = Video.query.filter_by(id=id_video, id_user=id_user).first()
+    if not video:
+        return jsonify({"message": "No se ha dado video"}), 404
+
+    # Eliminar la imagen previa existente si hay una
+    if video.prev_image:
+        try:
+            os.remove(video.prev_image)
+        except Exception as e:
+            return jsonify({"message": f"Failed to delete existing image: {str(e)}"}), 500
+
+    # Marcar el video como no favorito
+    video.is_favorite = False
+    db.session.commit()
+
+    return jsonify({"message": "Video removido de favoritos e imagen eliminada"}), 200
 
 # Ruta: /remove_video (DELETE)
 @video_bp.route('/remove_video', methods=['DELETE'])

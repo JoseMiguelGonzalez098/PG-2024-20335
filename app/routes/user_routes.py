@@ -21,7 +21,22 @@ def get_usuario_by_email():
     # words = Dictionary.query.filter_by(id_user=id_user).all()
     traductions = Traduccion.query.filter_by(id_user=usuario.id).all()
 
-    traductions_list = [{"sentence_lensegua": traduction.sentence_lensegua, "traduction_esp": traduction.traduction_esp} for traduction in traductions]
+    traductions_list = [
+        {
+            "sentence_lensegua": traduction.sentence_lensegua, 
+            "traduction_esp": traduction.traduction_esp
+        } for traduction in traductions]
+    
+    videos = Video.query.filter_by(id_user=usuario.id).all()
+
+    videos_list = [
+        {
+            "id": video.id,
+            "traduction_esp": video.traduction_esp,
+            "sentence_lensegua": video.sentence_lensegua,
+            "video": video.video
+        } for video in videos
+    ]
 
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     usuario_info = {
@@ -29,14 +44,7 @@ def get_usuario_by_email():
         "mail": usuario.mail,
         "streak": usuario.streak,
         "quetzalito": usuario.quetzalito,
-        "videos": [
-            {
-                "id": video.id,
-                "traduction_esp": video.traduction_esp,
-                "sentence_lensegua": video.sentence_lensegua,
-                "video": video.video
-            } for video in usuario.videos
-        ],
+        "videos": videos_list,
         "traducciones": traductions_list
     }
 
