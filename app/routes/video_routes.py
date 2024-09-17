@@ -11,11 +11,17 @@ video_bp = Blueprint('video_bp', __name__)
 VIDEO_STORAGE_PATH = '/srv/web-apps/api-central/videos/'
 IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
-ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
+ALLOWED_EXTENSIONS = {'mp4'}
+ALLOWED_IMAGE_EXTENSIONS = {'png'}
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def allowed_image(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
 
 @video_bp.route('/send_video', methods=['POST'])
 def send_video():
@@ -95,10 +101,9 @@ def report_video():
 # Ruta: /fav_video (POST)
 @video_bp.route('/fav_video', methods=['POST'])
 def fav_video():
-    data = request.get_json()
-    id_user = data.get('id_user')
-    id_video = data.get('id_video')
-    prev_video = request.files.get('prev_video')  # Cambiar a request.files.get()
+    id_user = request.form.get('id_user')
+    id_video = request.form.get('id_video')
+    prev_video = request.files.get('prev_video')
 
     usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
@@ -106,10 +111,10 @@ def fav_video():
     
     video = Video.query.filter_by(id=id_video, id_user=id_user).first()
     if not video:
-        return jsonify({"message": "No se ha dado video"}), 404
-    
-    if not prev_video:  # Verificar que se ha proporcionado una imagen
-        return jsonify({"message": "No se ha proporcionado imagen de preview"}), 400
+        return jsonify({"message": "Video no encontrado"}), 404
+
+    if not prev_video or not allowed_image(prev_video.filename):
+        return jsonify({"message": "No se ha proporcionado imagen de preview o el formato no es válido"}), 400
     
     # Asegurarse de que el nombre del archivo es seguro para usarlo en el sistema de archivos
     filename = secure_filename(prev_video.filename)
@@ -121,13 +126,15 @@ def fav_video():
     try:
         prev_video.save(save_path)
     except Exception as e:
-        return jsonify({"message": f"Failed to save image: {str(e)}"}), 500
+        return jsonify({"message": "Error al guardar la imagen"}), 500
 
     # Marcar el video como favorito
     video.is_favorite = True
+    # Guardar la ruta de la imagen si es necesario
+    video.preview_image = filename  # Asumiendo que tienes este campo en tu modelo
     db.session.commit()
 
-    return jsonify({"message": "Video marked as favorite"}), 200
+    return jsonify({"message": "Video marcado como favorito"}), 200
 
 @video_bp.route('/remove_fav_video', methods=['POST'])
 def remove_fav_video():
@@ -163,12 +170,27 @@ def remove_video():
 
     video = Video.query.filter_by(id=id_video).first()
     if not video:
-        return jsonify({"message": "Video not found"}), 404
+        return jsonify({"message": "Video no encontrado"}), 404
 
+    # Intentar eliminar el archivo de video del sistema de archivos
+    video_path = video.video
+    try:
+        os.remove(os.path.join(VIDEO_STORAGE_PATH, video_path))
+    except OSError as e:
+        print(f"Error al eliminar el archivo de video: {str(e)}")
+
+    # Intentar eliminar el archivo de imagen de previsualización si existe
+    if video.preview_image:
+        try:
+            os.remove(os.path.join(IMAGES_STORAGE_PATH, video.preview_image))
+        except OSError as e:
+            print(f"Error al eliminar el archivo de imagen: {str(e)}")
+
+    # Eliminar el video de la base de datos
     db.session.delete(video)
     db.session.commit()
 
-    return jsonify({"message": "Video deleted successfully"}), 200
+    return jsonify({"message": "Video eliminado exitosamente"}), 200
 
 @video_bp.route('/download_video/<path:filename>', methods=['POST'])
 def download_video(filename):
