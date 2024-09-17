@@ -154,6 +154,7 @@ def remove_fav_video():
     if video.prev_image:
         try:
             os.remove(os.path.join(IMAGES_STORAGE_PATH, video.prev_image))
+            video.prev_image = None
         except Exception as e:
             return jsonify({"message": f"Failed to delete existing image: {str(e)}"}), 500
 
