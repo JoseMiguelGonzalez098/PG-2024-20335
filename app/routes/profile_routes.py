@@ -22,6 +22,7 @@ def get_user_info():
     video_fav_with_link = []
     for video in videos_fav:
         video_fav_with_link.append({
+            "id_video": video.id,
             "sentence_lensegua": video.sentence_lensegua,
             "traduction_esp": video.traduction_esp,
             "link_video": url_for('video_bp.download_video', filename=video.video.split('/')[-1], _external=True),
