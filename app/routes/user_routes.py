@@ -77,7 +77,7 @@ def singup():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    quezalito = data.get('quezalito')
+    quetzalito = data.get('quetzalito')
     if not email:
         return jsonify({"message": "No email provided"}), 400
     
@@ -91,7 +91,7 @@ def singup():
         mail=email,
         password=password,
         streak=0, 
-        quetzalito=quezalito
+        quetzalito=quetzalito
     )
 
     # Enviar correo de confirmación
