@@ -18,13 +18,30 @@ def get_user_info():
     videos_fav = Video.query.filter_by(id_user=id_user, is_favorite=True).all()
     traducciones_fav = Traduccion.query.filter_by(id_user=id_user, is_favorite=True).all()
 
+    # Preparar la lista de videos con enlaces
+    video_fav_with_link = []
+    for video in videos_fav:
+        video_fav_with_link.append({
+            "sentence_lensegua": video.sentence_lensegua,
+            "traduction_esp": video.traduction_esp,
+            "link_video": url_for('video_bp.download_video', filename=video.video.split('/')[-1], _external=True),
+            "prev_image": url_for('video_bp.download_image', filename=video.prev_image.split('/')[-1], _external=True)
+        })
+
     # Preparar la respuesta con la información del usuario
     user_info = {
         "mail": usuario.mail,
         "streak": usuario.streak,
         "quetzalito": usuario.quetzalito,
-        "videos_fav": [{"sentence_lensegua":video.sentence_lensegua,"traduction_esp": video.traduction_esp, "id_video": video.id, "prev_image": video.prev_image} for video in videos_fav],
-        "traductions_fav": [{"traduction": trad.traduction_esp, "sentence_lensegua": trad.sentence_lensegua, "id_traduction": trad.id} for trad in traducciones_fav]
+        "videos_fav": video_fav_with_link,  # Usar la lista con enlaces
+        "traductions_fav": [
+            {
+                "traduction": trad.traduction_esp, 
+                "sentence_lensegua": trad.sentence_lensegua, 
+                "id_traduction": trad.id
+            } 
+            for trad in traducciones_fav
+        ]
     }
 
     return jsonify(user_info), 200
