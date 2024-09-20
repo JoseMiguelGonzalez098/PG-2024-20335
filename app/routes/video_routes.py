@@ -55,7 +55,7 @@ def send_video():
         process_video_url = f"http://10.47.92.60:8081/processVideo?VideoURL={video_url}"
         
         # Hacer la solicitud HTTP
-        response = requests.get(process_video_url)
+        response = request.get(process_video_url)
 
         # Verificar si la solicitud fue exitosa
         if response.status_code == 200:
@@ -63,7 +63,7 @@ def send_video():
         else:
             return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
 
-    except requests.exceptions.RequestException as e:
+    except request.exceptions.RequestException as e:
         return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
 
     # Suponemos que la traducción en español es algo predeterminado o generado localmente
