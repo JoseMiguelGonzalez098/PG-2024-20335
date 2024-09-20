@@ -49,8 +49,25 @@ def send_video():
     except Exception as e:
         return jsonify({"message": "Error al guardar archivo"}), 500
 
-    # Procesamiento de la oración para obtener la traducción
-    sentence_lensegua = "Texto en lensegua"
+    # Hacer una solicitud al servicio externo para obtener la traducción (try-except)
+    try:
+        video_url = f"http://192.168.244.3:4242/download_video/{filename}"
+        process_video_url = f"http://10.47.92.60:8081/processVideo?VideoURL={video_url}"
+        
+        # Hacer la solicitud HTTP
+        response = requests.get(process_video_url)
+
+        # Verificar si la solicitud fue exitosa
+        if response.status_code == 200:
+            sentence_lensegua = response.text  # Asignar la respuesta de la solicitud
+        else:
+            return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
+
+    # Suponemos que la traducción en español es algo predeterminado o generado localmente
+    traduction_esp = "Traducción del video en español"
     traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
