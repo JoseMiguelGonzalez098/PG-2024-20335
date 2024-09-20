@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+import requests
 from app.models import User, Video
 from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
@@ -55,7 +56,7 @@ def send_video():
         process_video_url = f"http://10.47.92.60:8081/processVideo?VideoURL={video_url}"
         
         # Hacer la solicitud HTTP
-        response = request.get(process_video_url)
+        response = requests.get(process_video_url)
 
         # Verificar si la solicitud fue exitosa
         if response.status_code == 200:
@@ -63,11 +64,10 @@ def send_video():
         else:
             return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
 
-    except request.exceptions.RequestException as e:
+    except requests.exceptions.RequestException as e:
         return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
 
     # Suponemos que la traducción en español es algo predeterminado o generado localmente
-    traduction_esp = "Traducción del video en español"
     traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
