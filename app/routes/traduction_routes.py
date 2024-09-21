@@ -1,8 +1,13 @@
 from flask import Blueprint, jsonify, request
+import requests
 from app import db
 from app.models import Traduccion, User
+from app.config import Config
 
 traduction_bp = Blueprint('traduction_bp', __name__)
+
+# Acceder a las variables de config
+use_openai = Config.USE_MODEL_OPENAI
 
 @traduction_bp.route('/send_traduction', methods=['POST'])
 def send_traduction():
@@ -19,13 +24,31 @@ def send_traduction():
     if not sentence_lensegua:
         return jsonify({"message": "Frase en lensegua es requerida"}), 400
     
-    # Traducir la frase a español
-    traduccion_esp = sentence_lensegua + "traduccion ESP"
+
+    if use_openai:
+        # Hacer una solicitud POST a la URL de generar traducción en español
+        try:
+            process_sentence_url = "http://10.47.92.70:8081/api/generar"
+            payload = {"texto": sentence_lensegua}
+            
+            # Hacer la solicitud HTTP POST
+            response = requests.post(process_sentence_url, json=payload)
+            
+            # Verificar si la solicitud fue exitosa
+            if response.status_code == 200:
+                traduction_esp = response.json().get("traduccion_esp", "Traducción no disponible")
+            else:
+                return jsonify({"message": f"Error al obtener traducción: {response.status_code}"}), 500
+
+        except requests.exceptions.RequestException as e:
+            return jsonify({"message": f"Error en la solicitud al servicio de traducción: {str(e)}"}), 500
+    else:
+        traduction_esp = "TRADUCCION ESP"
 
     new_traduction = Traduccion(
         id_user=id_user,
         sentence_lensegua=sentence_lensegua,
-        traduction_esp=traduccion_esp,
+        traduction_esp=traduction_esp,
         is_favorite=False
     )
 

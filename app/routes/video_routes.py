@@ -4,6 +4,7 @@ from app.models import User, Video
 from werkzeug.utils import secure_filename
 from app import db  # Importar db para interactuar con la base de datos
 from flask import send_from_directory
+from app.config import Config
 import os
 
 video_bp = Blueprint('video_bp', __name__)
@@ -14,6 +15,10 @@ IMAGES_STORAGE_PATH = '/srv/web-apps/api-central/images/'
 
 ALLOWED_EXTENSIONS = {'mp4'}
 ALLOWED_IMAGE_EXTENSIONS = {'png'}
+
+# Acceder a las variables de config
+use_openai = Config.USE_MODEL_OPENAI
+use_cv = Config.USE_MODEL_CV
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -49,23 +54,46 @@ def send_video():
         file.save(file_path)
     except Exception as e:
         return jsonify({"message": "Error al guardar archivo"}), 500
+    
+    if use_cv:
+        # Hacer una solicitud al servicio externo para obtener la traducción (try-except)
+        try:
+            video_url = f"http://192.168.244.3:4242/download_video/{filename}"
+            process_video_url = f"http://10.47.92.60:8081/processVideo?VideoURL={video_url}"
+            
+            # Hacer la solicitud HTTP
+            response = requests.get(process_video_url)
 
-    # Hacer una solicitud al servicio externo para obtener la traducción (try-except)
-    try:
-        video_url = f"http://192.168.244.3:4242/download_video/{filename}"
-        process_video_url = f"http://10.47.92.60:8081/processVideo?VideoURL={video_url}"
-        
-        # Hacer la solicitud HTTP
-        response = requests.get(process_video_url)
+            # Verificar si la solicitud fue exitosa
+            if response.status_code == 200:
+                sentence_lensegua = response.text  # Asignar la respuesta de la solicitud
+            else:
+                return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
 
-        # Verificar si la solicitud fue exitosa
-        if response.status_code == 200:
-            sentence_lensegua = response.text  # Asignar la respuesta de la solicitud
-        else:
-            return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
+        except requests.exceptions.RequestException as e:
+            return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
+    else:
+        sentence_lensegua = "SENTENCE LENSGUA"
 
-    except requests.exceptions.RequestException as e:
-        return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
+    if use_openai:
+        # Hacer una solicitud POST a la URL de generar traducción en español
+        try:
+            process_sentence_url = "http://10.47.92.70:8081/api/generar"
+            payload = {"texto": sentence_lensegua}
+            
+            # Hacer la solicitud HTTP POST
+            response = requests.post(process_sentence_url, json=payload)
+            
+            # Verificar si la solicitud fue exitosa
+            if response.status_code == 200:
+                traduction_esp = response.json().get("traduccion_esp", "Traducción no disponible")
+            else:
+                return jsonify({"message": f"Error al obtener traducción: {response.status_code}"}), 500
+
+        except requests.exceptions.RequestException as e:
+            return jsonify({"message": f"Error en la solicitud al servicio de traducción: {str(e)}"}), 500
+    else:
+        traduction_esp = "TRADUCCION ESP"
 
     # Suponemos que la traducción en español es algo predeterminado o generado localmente
     traduction_esp = "Traducción del video en español"
