@@ -9,7 +9,6 @@ from app.routes.dictionary_routes import dictionary_bp
 from app.routes.profile_routes import profile_bp
 from app.routes.mailer_routes import mailer_bp
 from .mailer import init_mail, mail
-from prometheus_flask_exporter import PrometheusMetrics
 
 def create_app():
     app = Flask(__name__)
@@ -29,8 +28,5 @@ def create_app():
     app.register_blueprint(dictionary_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(mailer_bp)
-    
-    # Registrar métricas de Prometheus
-    metrics = PrometheusMetrics(app)
 
     return app

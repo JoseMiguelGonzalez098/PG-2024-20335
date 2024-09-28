@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, url_for, current_app
+from flask import Blueprint, jsonify, request, url_for
 from app import db
 from app.models import User, Video, Traduccion
 
@@ -6,7 +6,6 @@ profile_bp = Blueprint('profile_bp', __name__)
 
 @profile_bp.route('/get_user_info', methods=['POST'])
 def get_user_info():
-    metrics = current_app.config['metrics']
     data = request.get_json()
     id_user = data.get('id_user')
 
