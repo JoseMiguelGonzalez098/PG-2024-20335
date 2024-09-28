@@ -33,4 +33,4 @@ def create_app():
     # Registrar métricas de Prometheus
     metrics = PrometheusMetrics(app)
 
-    return app, metrics
+    return app
