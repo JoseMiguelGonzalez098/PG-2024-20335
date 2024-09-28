@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request, url_for
-from app import db
+from app import db, metrics  
 from app.models import User, Video, Traduccion
 
 profile_bp = Blueprint('profile_bp', __name__)
 
+@metrics.counter('get_user_info_requests_total', 'Total requests for get_user_info')
 @profile_bp.route('/get_user_info', methods=['POST'])
 def get_user_info():
     data = request.get_json()

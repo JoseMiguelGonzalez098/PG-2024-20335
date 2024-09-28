@@ -9,7 +9,7 @@ from app.routes.dictionary_routes import dictionary_bp
 from app.routes.profile_routes import profile_bp
 from app.routes.mailer_routes import mailer_bp
 from .mailer import init_mail, mail
-from flask_prometheus_metrics import register_metrics
+from prometheus_flask_exporter import PrometheusMetrics
 
 def create_app():
     app = Flask(__name__)
@@ -31,6 +31,6 @@ def create_app():
     app.register_blueprint(mailer_bp)
     
     # Registrar métricas de Prometheus
-    register_metrics(app, app_version="v1.0.0", app_config="production")
+    metrics = PrometheusMetrics(app)
 
-    return app
+    return app, metrics
