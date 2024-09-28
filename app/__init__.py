@@ -31,6 +31,6 @@ def create_app():
     app.register_blueprint(mailer_bp)
     
     # Registrar métricas de Prometheus
-    register_metrics(app, app_version="v1.0.0", app_config="production")
+    register_metrics(app, app_version="v1.0.0", app_config="production", endpoint="/monitoring/metrics")
 
     return app
