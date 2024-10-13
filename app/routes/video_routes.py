@@ -100,7 +100,7 @@ def send_video():
         traduction_esp = "TRADUCCION ESP"
 
     # Suponemos que la traducción en español es algo predeterminado o generado localmente
-    traduction_esp = "Traducción del video en español"
+    # traduction_esp = "Traducción del video en español"
 
     # Crear un nuevo objeto Video y guardar la ruta en la base de datos
     new_video = Video(
