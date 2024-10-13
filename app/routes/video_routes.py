@@ -88,7 +88,11 @@ def send_video():
             if response.status_code == 200:
                 traduction_esp = response.json().get("traduccion_esp", "Traducción no disponible")
             else:
-                return jsonify({"message": f"Error al obtener traducción: {response.status_code}"}), 500
+                # return jsonify({
+                #     "message": f"Error al obtener traducción: {response.status_code}",
+                #     "sentence_lensegua": sentence_lensegua
+                # }), 500
+                traduction_esp = sentence_lensegua
 
         except requests.exceptions.RequestException as e:
             return jsonify({"message": f"Error en la solicitud al servicio de traducción: {str(e)}"}), 500
