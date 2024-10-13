@@ -66,9 +66,14 @@ def send_video():
 
             # Verificar si la solicitud fue exitosa
             if response.status_code == 200:
-                sentence_lensegua = response.text  # Asignar la respuesta de la solicitud
+                # Parsear la respuesta JSON
+                response_json = response.json()
+                sentence_lensegua = response_json.get("text", "Texto no disponible")  # Extraer el valor de "text"
             else:
-                return jsonify({"message": f"Error al procesar video: {response.status_code}"}), 500
+                return jsonify({
+                    "message": f"Error al procesar video: {response.status_code}",
+                    "sentence_lensegua": None
+                }), 500
 
         except requests.exceptions.RequestException as e:
             return jsonify({"message": f"Error en la solicitud al procesar el video: {str(e)}"}), 500
