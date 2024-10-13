@@ -6,7 +6,7 @@ class Config:
 
     # Configuracion uso de Modelos
     USE_MODEL_OPENAI = True
-    USE_MODEL_CV = True
+    USE_MODEL_CV = False
 
     # Configuración de Flask-Mail
     MAIL_SERVER = 'smtp.gmail.com'
