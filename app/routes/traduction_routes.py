@@ -24,9 +24,9 @@ def send_traduction():
     if not sentence_lensegua:
         return jsonify({"message": "Frase en lensegua es requerida"}), 400
     
-
+    # Verificar si se usa el modelo OpenAI
     if use_openai:
-        # Hacer una solicitud POST a la URL de generar traducción en español
+        # Hacer una solicitud POST al servicio de traducción
         try:
             process_sentence_url = "http://10.47.92.70:8081/api/generar"
             payload = {"texto": sentence_lensegua}
@@ -36,7 +36,10 @@ def send_traduction():
             
             # Verificar si la solicitud fue exitosa
             if response.status_code == 200:
-                traduction_esp = response.json().get("traduccion_esp", "Traducción no disponible")
+                # Acceder a la clave 'respuesta' en lugar de 'traduccion_esp'
+                traduction_esp = response.json().get("respuesta", "")
+                if not traduction_esp:
+                    return jsonify({"message": "No se pudo obtener la traducción"}), 500
             else:
                 return jsonify({"message": f"Error al obtener traducción: {response.status_code}"}), 500
 
@@ -45,6 +48,7 @@ def send_traduction():
     else:
         traduction_esp = "TRADUCCION ESP"
 
+    # Crear y guardar la nueva traducción en la base de datos
     new_traduction = Traduccion(
         id_user=id_user,
         sentence_lensegua=sentence_lensegua,
@@ -52,9 +56,14 @@ def send_traduction():
         is_favorite=False
     )
 
-    db.session.add(new_traduction)
-    db.session.commit()
+    try:
+        db.session.add(new_traduction)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error al guardar en la base de datos"}), 500
 
+    # Responder con los datos de la traducción guardada
     return jsonify(
         {
             "id_sentence": new_traduction.id, 
