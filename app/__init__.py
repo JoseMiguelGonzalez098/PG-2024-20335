@@ -7,8 +7,7 @@ from app.routes.user_routes import user_bp
 from app.routes.video_routes import video_bp
 from app.routes.dictionary_routes import dictionary_bp
 from app.routes.profile_routes import profile_bp
-from app.routes.mailer_routes import mailer_bp
-from .mailer import init_mail, mail
+from app.routes.mail_routes import mailer_bp
 
 def create_app():
     app = Flask(__name__)
@@ -17,9 +16,6 @@ def create_app():
     # Inicializar la base de datos y migraciones
     db.init_app(app)
     migrate = Migrate(app, db)
-
-    # Inicializar Flask-Mail
-    mail.init_app(app)
 
     # Registrar los Blueprints
     app.register_blueprint(user_bp)
