@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models import User, Video, Traduccion
 from app import db
-from app.utils.email_utils import send_confirmation_email
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
