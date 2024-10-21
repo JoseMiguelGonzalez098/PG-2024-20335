@@ -140,4 +140,4 @@ def remove_streak():
     usuario.streak += 1
     db.session.commit()
 
-    return jsonify({"message": "Streak incremented", "streak": usuario.streak}), 200
+    return jsonify({"message": "Streak deleted", "streak": usuario.streak}), 200
