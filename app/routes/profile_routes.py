@@ -125,3 +125,19 @@ def add_streak():
     db.session.commit()
 
     return jsonify({"message": "Streak incremented", "streak": usuario.streak}), 200
+
+@profile_bp.route('/remove_streak', methods=['POST'])
+def remove_streak():
+    data = request.get_json()
+    id_user = data.get('id_user')
+
+    # Verificar que el usuario exista
+    usuario = User.query.filter_by(id=id_user).first()
+    if not usuario:
+        return jsonify({"message": "User not found"}), 404
+
+    # Incrementar el streak del usuario
+    usuario.streak += 1
+    db.session.commit()
+
+    return jsonify({"message": "Streak incremented", "streak": usuario.streak}), 200
