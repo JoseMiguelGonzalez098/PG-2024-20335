@@ -6,9 +6,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import sys
 
-mail_bp = Blueprint('mail_bp', __name__)
+mailer_bp = Blueprint('mailer_bp', __name__)
 
-@mail_bp.route('/send_mail', methods=['POST'])
+@mailer_bp.route('/send_mail', methods=['POST'])
 def get_usuario_by_email():
     # Configuración del servidor SMTP de Gmail
     smtp_server = "smtp.gmail.com"
