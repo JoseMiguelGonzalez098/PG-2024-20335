@@ -50,9 +50,9 @@ def get_usuario_by_email():
         server.login(sender_email, password)  # Iniciar sesión en Gmail con la contraseña de aplicación
         server.sendmail(sender_email, recipient_email, message.as_string())  # Enviar el correo
         server.quit()  # Cerrar la conexión con el servidor SMTP
-        print(f"Correo enviado con éxito a {recipient_email}.")
+        return jsonify({"message": f"Correo enviado con éxito a {recipient_email}."}), 200
     except Exception as e:
-        print(f"Error al enviar el correo: {e}")
+        return jsonify({"error": f"Error al enviar el correo: {str(e)}"}), 500
 
 # Función para generar el contenido HTML
 def generar_html(nombre, correo):
