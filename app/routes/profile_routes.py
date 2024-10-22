@@ -137,7 +137,7 @@ def remove_streak():
         return jsonify({"message": "User not found"}), 404
 
     # Incrementar el streak del usuario
-    usuario.streak == 0
+    usuario.streak = 0
     db.session.commit()
 
     return jsonify({"message": "Streak deleted", "streak": usuario.streak}), 200
