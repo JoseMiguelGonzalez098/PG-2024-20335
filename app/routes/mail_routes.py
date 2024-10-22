@@ -10,18 +10,16 @@ mailer_bp = Blueprint('mailer_bp', __name__)
 
 @mailer_bp.route('/send_mail', methods=['POST'])
 def get_usuario_by_email():
+    recipient_email = request.args.get('email')
+
+    if not recipient_email:
+        return jsonify({"error": "Por favor, proporciona un correo de destinatario."}), 400
+
     # Configuración del servidor SMTP de Gmail
     smtp_server = "smtp.gmail.com"
     smtp_port = 587  # Puerto SMTP de Gmail para conexión TLS
     sender_email = "senas.chapinas@gmail.com"  # Tu correo de Gmail
     password = "qmcn gmjl zjsu utva"  # Tu contraseña de aplicación generada en Gmail
-
-    # Obtener el correo del destinatario desde la terminal
-    if len(sys.argv) < 2:
-        print("Por favor, proporciona un correo de destinatario.")
-        sys.exit(1)
-
-    recipient_email = sys.argv[1]
 
     # Obtener el nombre usando la parte antes de la arroba
     nombre = recipient_email.split("@")[0]
