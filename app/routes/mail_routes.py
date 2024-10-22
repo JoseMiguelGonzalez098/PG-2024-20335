@@ -10,7 +10,8 @@ mailer_bp = Blueprint('mailer_bp', __name__)
 
 @mailer_bp.route('/send_mail', methods=['POST'])
 def get_usuario_by_email():
-    recipient_email = request.args.get('email')
+    data = request.get_json()
+    recipient_email = data.get('email')
 
     if not recipient_email:
         return jsonify({"error": "Por favor, proporciona un correo de destinatario."}), 400
