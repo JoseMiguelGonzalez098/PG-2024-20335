@@ -143,9 +143,9 @@ def report_video():
     if not usuario:
         return jsonify({"message": "Usuario no encontrado"}), 404
     
-    video = Video.query.filter_by(id=id_video, id_user=id_user).first()
-    if not video:
-        return jsonify({"message": "Video no encontardo"}), 404
+    # video = Video.query.filter_by(id=id_video, id_user=id_user).first()
+    # if not video:
+    #     return jsonify({"message": "Video no encontardo"}), 404
 
     # Aquí podrías implementar lógica para almacenar o manejar el reporte.
     # Por simplicidad, solo devolvemos un mensaje de éxito.
