@@ -8,7 +8,7 @@ import sys
 
 mailer_bp = Blueprint('mailer_bp', __name__)
 
-@mailer_bp.route('/send_mail', methods=['POST'])
+@mailer_bp.route('/forgot_password', methods=['POST'])
 def get_usuario_by_email():
     data = request.get_json()
     recipient_email = data.get('email')
