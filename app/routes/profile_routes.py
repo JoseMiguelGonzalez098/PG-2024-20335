@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, url_for
 from app import db
 from app.models import User, Video, Traduccion
+from datetime import datetime, timedelta
 
 profile_bp = Blueprint('profile_bp', __name__)
 
@@ -122,6 +123,7 @@ def add_streak():
 
     # Incrementar el streak del usuario
     usuario.streak += 1
+    usuario.last_streak_update = datetime.utcnow() 
     db.session.commit()
 
     return jsonify({"message": "Streak incremented", "streak": usuario.streak}), 200
@@ -141,3 +143,30 @@ def remove_streak():
     db.session.commit()
 
     return jsonify({"message": "Streak deleted", "streak": usuario.streak}), 200
+
+@profile_bp.route('/check_streak', methods=['POST'])
+def check_streak():
+    data = request.get_json()
+    id_user = data.get('id_user')
+
+    # Verificar que el usuario exista
+    usuario = User.query.filter_by(id=id_user).first()
+    if not usuario:
+        return jsonify({"message": "User not found"}), 404
+
+    # Calcular la diferencia de tiempo desde la última actualización
+    if usuario.last_streak_update:
+        delta = datetime.utcnow() - usuario.last_streak_update
+        if delta > timedelta(days=1):
+            # Ha pasado más de un día, reiniciar el streak
+            usuario.streak = 0
+            usuario.last_streak_update = datetime.utcnow()
+            db.session.commit()
+            return jsonify({"message": "Streak reset due to inactivity", "streak": usuario.streak}), 200
+        else:
+            return jsonify({"message": "Streak is up to date", "streak": usuario.streak}), 200
+    else:
+        # Si no hay registro previo, considera inicializarlo
+        usuario.last_streak_update = datetime.utcnow()
+        db.session.commit()
+        return jsonify({"message": "Initialized streak update timestamp", "streak": usuario.streak}), 200

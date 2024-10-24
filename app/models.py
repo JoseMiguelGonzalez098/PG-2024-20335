@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -11,6 +12,7 @@ class User(db.Model):
     mail = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     streak = db.Column(db.Integer, default=0)  # Se asume que el streak inicia en 0
+    last_streak_update = db.Column(db.DateTime, default=datetime.utcnow)
     quetzalito = db.Column(db.String(120), nullable=True)  # Se asume que puede ser nulo
     confirmed = db.Column(db.Boolean, default=False)
 
