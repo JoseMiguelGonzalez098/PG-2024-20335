@@ -14,7 +14,14 @@ def get_usuario_by_email():
     recipient_email = data.get('email')
 
     if not recipient_email:
-        return jsonify({"error": "Por favor, proporciona un correo de destinatario."}), 400
+        return jsonify({"error": "Por favor, proporciona un correo de destinatario con correo o id."}), 400
+
+    # Verificar si el correo es un ID de usuario
+    if recipient_email.isdigit():
+        usuario = User.query.filter_by(id=recipient_email).first()
+        if not usuario:
+            return jsonify({"error": "Usuario no encontrado."}), 404
+        recipient_email = usuario.mail
 
     # Configuración del servidor SMTP de Gmail
     smtp_server = "smtp.gmail.com"
