@@ -123,6 +123,9 @@ def change_password():
     # Cambiar la contraseña
     usuario.password = new_password
 
+    # Guardar los cambios en la base de datos
+    db.session.commit()
+
     # Preparar la respuesta en formato JSON con los datos del usuario, videos y traducciones
     responce = {
         "id_user": usuario.id
