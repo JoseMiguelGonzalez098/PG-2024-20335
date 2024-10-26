@@ -113,7 +113,7 @@ def change_password():
     id_user = data.get('id_user')
     new_password = data.get('new_password')
    
-    usuario = User.query.filter_by(id_user=id_user).first()
+    usuario = User.query.filter_by(id=id_user).first()
     if not usuario:
         return jsonify({"message": "User not found"}), 404
     
