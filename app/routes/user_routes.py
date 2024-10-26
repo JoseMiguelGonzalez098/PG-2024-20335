@@ -110,10 +110,10 @@ def singup():
 @user_bp.route('/change_password', methods=['POST'])
 def change_password():
     data = request.get_json()
-    id_user = data.get('id_user')
+    email = data.get('id_user')
     new_password = data.get('new_password')
    
-    usuario = User.query.filter_by(id=id_user).first()
+    usuario = User.query.filter_by(mail=email).first()
     if not usuario:
         return jsonify({"message": "User not found"}), 404
     
