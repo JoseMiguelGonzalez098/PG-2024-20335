@@ -90,7 +90,7 @@ def fav_traduction():
     traduction.is_favorite = True
     db.session.commit()
 
-    return jsonify({"message": "Traduccion desmarcada como favorita"}), 200
+    return jsonify({"message": "Traduccion marcada como favorita"}), 200
 
 @traduction_bp.route('/remove_fav_traduction', methods=['POST'])
 def remove_fav_traduction():
@@ -111,7 +111,7 @@ def remove_fav_traduction():
     traduction.is_favorite = False
     db.session.commit()
 
-    return jsonify({"message": "Traduccion marcada como favorita"}), 200
+    return jsonify({"message": "Traduccion desmarcada como favorita"}), 200
 
 @traduction_bp.route('/remove_traduction', methods=['DELETE'])
 def remove_traduction():
