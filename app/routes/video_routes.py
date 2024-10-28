@@ -102,7 +102,7 @@ def send_video():
         except requests.exceptions.RequestException as e:
             return jsonify({"message": f"Error en la solicitud al servicio de traducción: {str(e)}"}), 500
     else:
-        traduction_esp = "TRADUCCION ESP"
+        traduction_esp = "Voy a la universidad"
 
     # Suponemos que la traducción en español es algo predeterminado o generado localmente
     # traduction_esp = "Traducción del video en español"

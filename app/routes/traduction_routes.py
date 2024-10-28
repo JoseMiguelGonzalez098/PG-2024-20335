@@ -46,7 +46,7 @@ def send_traduction():
         except requests.exceptions.RequestException as e:
             return jsonify({"message": f"Error en la solicitud al servicio de traducción: {str(e)}"}), 500
     else:
-        traduction_esp = "TRADUCCION ESP"
+        traduction_esp = "Voy a la universidad"
 
     # Crear y guardar la nueva traducción en la base de datos
     new_traduction = Traduccion(
