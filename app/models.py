@@ -15,6 +15,9 @@ class User(db.Model):
     last_streak_update = db.Column(db.DateTime, default=datetime.utcnow)
     quetzalito = db.Column(db.String(120), nullable=True)  # Se asume que puede ser nulo
     confirmed = db.Column(db.Boolean, default=False)
+    videos = relationship('Video', backref='user', cascade="all, delete", lazy=True)
+    traducciones = relationship('Traduccion', backref='user', cascade="all, delete", lazy=True)
+    dictionary_entries = relationship('Dictionary', backref='user', cascade="all, delete", lazy=True)
 
     def __repr__(self):
         return f'<User {self.mail}>'
@@ -45,6 +48,7 @@ class Traduccion(db.Model):
     def __repr__(self):
         return f'<Traduccion {self.id} para usuario {self.id_user}>'
 
+# Tabla: dictionary
 class Dictionary(db.Model):
     __tablename__ = 'dictionary'
     id = db.Column(db.Integer, primary_key=True)
