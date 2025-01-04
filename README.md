@@ -79,7 +79,7 @@ El informe final del proyecto de graduación está disponible en la carpeta `/do
 
 Para acceder al informe:
 - Navegue a la carpeta `docs/`.
-- Abra el archivo `Informe_Final.pdf`.
+- Abra el archivo `Protocolo_Jose_Miguel_Gonzalez_20335.pdf`.
 
 ---
 
@@ -87,22 +87,22 @@ Para acceder al informe:
 Antes de entregar el proyecto, asegúrese de cumplir con los siguientes puntos:
 
 ### **1. Estructura de Carpetas**
-- [ ] La carpeta `/demo` existe y contiene el archivo `Demo.mp4`.
-- [ ] La carpeta `/docs` existe y contiene el archivo `Informe.pdf`.
-- [ ] La carpeta `/src` existe y contiene:
-  - [ ] Todos los archivos del código fuente del proyecto.
+- [x] La carpeta `/demo` existe y contiene el archivo `Demo.mp4`.
+- [x] La carpeta `/docs` existe y contiene el archivo `Informe.pdf`.
+- [x] La carpeta `/src` existe y contiene:
+  - [x] Todos los archivos del código fuente del proyecto.
 
 ### **2. Archivo README.md**
-- [ ] El archivo `README.md` está presente en la raíz del repositorio.
-- [ ] Está escrito en formato Markdown (.md).
-- [ ] Contiene una breve descripción del proyecto.
-- [ ] Proporciona instrucciones claras de instalación y ejecución.
-- [ ] Incluye una referencia al video demo en la carpeta `/demo/`.
-- [ ] Proporciona un enlace o referencia clara al informe final en la carpeta `/docs/`.
+- [x] El archivo `README.md` está presente en la raíz del repositorio.
+- [x] Está escrito en formato Markdown (.md).
+- [x] Contiene una breve descripción del proyecto.
+- [x] Proporciona instrucciones claras de instalación y ejecución.
+- [x] Incluye una referencia al video demo en la carpeta `/demo/`.
+- [x] Proporciona un enlace o referencia clara al informe final en la carpeta `/docs/`.
 
 ### **3. Revisión de Recursos**
-- [ ] El archivo `Demo.mp4` está presente y es reproducible.
-- [ ] El archivo `Informe.pdf` está presente y es accesible.
+- [x] El archivo `Demo.mp4` está presente y es reproducible.
+- [x] El archivo `Protocolo_Jose_Miguel_Gonzalez_20335.pdf` está presente y es accesible.
 
 Cualquier proyecto que no cumpla con estos requisitos deberá ser corregido antes de la entrega final.
 
